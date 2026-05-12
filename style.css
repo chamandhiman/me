@@ -649,6 +649,51 @@ nav.scrolled {
     animation: 0.8s ease 0.8s 1 normal both running fadeInUp;
 }
 
+.hero-typing-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    margin: 0px auto 1.5rem;
+    max-width: 900px;
+}
+
+.hero-typing {
+    display: inline-block;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    text-transform: uppercase;
+    animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.typing-cursor {
+    display: inline-block;
+    font-size: 2.2rem;
+    color: var(--primary);
+    animation: blinkCursor 0.8s step-end infinite;
+}
+
+@keyframes blinkCursor {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+@media (max-width: 820px) {
+    .hero-typing {
+        font-size: 1.7rem;
+    }
+}
+
 .hero-feature-panel {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -909,10 +954,10 @@ section {
     width: 100%;
 }
 
-.section-title .gradient-text {
+/* .section-title .gradient-text {
     -webkit-text-fill-color: transparent;
     background-clip: text;
-}
+} */
 
 .section-subtitle {
     text-align: center;
@@ -1976,6 +2021,152 @@ img {
     border-radius: 50rem !important;
 }
 
+.card {
+    border: 5px solid rgb(255, 255, 255);
+    box-shadow: rgb(204, 204, 204) 0px 0px 5px;
+}
+
+.card-image {
+    max-height: 250px;
+    overflow: hidden;
+}
+
+.card-info {
+    padding: 10px;
+    text-align: center;
+}
+
+.card-info p {
+    margin: 0px;
+}
+
+.features-boxed {
+    color: rgb(49, 52, 55);
+}
+
+.features-boxed p {
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+}
+
+.features-boxed h2 {
+    font-weight: bold;
+    margin-bottom: 40px;
+    padding-top: 40px;
+    color: inherit;
+}
+
+.features {
+    color: rgb(0, 0, 0);
+}
+
+.features p {
+    color: rgb(0, 0, 0);
+}
+
+.features h2 {
+    font-weight: bold;
+    margin-bottom: 40px;
+    padding-top: 40px;
+    color: inherit;
+
+}
+
+.bg-wrapper {
+    width: 100%;
+    aspect-ratio: 1600 / 1200;
+    /* 4:1 ratio */
+    background-size: cover;
+    /* fills the container */
+    background-position: center;
+    background-repeat: no-repeat;
+    align-content: center;
+    justify-content: center;
+    display: flex;
+    position: relative;
+    max-height: 380px;
+    overflow: hidden;
+    background-attachment: fixed;
+}
+
+.shadows {
+    background: #fff;
+    padding: 12px !important;
+    box-shadow: 0 0 4px #ccc;
+    -ms-box-shadow: 0 0 4px #ccc;
+    -webkit-box-shadow: 0 0 4px #ccc;
+}
+
+ul.shadows li a {
+    border-bottom: 1px solid #eaeaea;
+    display: block;
+    padding: 8px 0;
+    color: #000;
+}
+
+.imagebanner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imagebanner h1 {
+    color: #fff;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.7);
+}
+
+.templatebox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-box {
+    width: 350px;
+    height: 350px;
+    overflow: hidden;
+    position: relative;
+    border: 10px solid #fff;
+    box-shadow: 0 0 4px #ccc;
+}
+
+.image-box img {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 1s linear;
+}
+
+/* On hover scroll entire image upward */
+.image-box:hover img {
+    transform: translateY(calc(350px - 100%));
+}
+
+/* Overlay style */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    /* So hover still works */
+    transition: opacity 0.4s ease;
+}
+
+/* Show overlay on hover */
+.image-box:hover .overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Responsive starts */
 @media (min-width: 576px) {
     .modal-dialog {
         max-width: 500px;
