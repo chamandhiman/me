@@ -668,7 +668,7 @@ nav.scrolled {
     justify-content: center;
     gap: 0.7rem;
     margin: 0px auto 1.5rem;
-    max-width: 900px;
+    /* max-width: 900px; */
 }
 
 .hero-typing {
@@ -709,7 +709,7 @@ nav.scrolled {
 
 .hero-feature-panel {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(288px, 1fr));
     gap: 1rem;
     max-width: 1120px;
     margin: 0px auto 2.5rem;

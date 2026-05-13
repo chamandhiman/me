@@ -47,38 +47,31 @@
                     web development, and brand identity. Transforming ideas into stunning realities.
                 </p>
                 <div class="hero-feature-panel">
-                    <div class="feature-item">
-                        <div class="feature-title">Design, UI/UX & Prototyping</div>
-                        <div class="feature-copy">Figma · Google Stitch · Loveable AI, Photoshop, Adobe XD</div>
-                    </div>
+
                     <div class="feature-item">
                         <div class="feature-title">AI Tools</div>
                         <div class="feature-copy">ChatGPT · Prompt Generation · GitHub Copilot, Claude Code</div>
                     </div>
                     <div class="feature-item">
-                        <div class="feature-title">Expert Frontend Basics</div>
-                        <div class="feature-copy">HTML · CSS · jQuery · Responsive Design</div>
+                        <div class="feature-title">UI Design & Prototyping Tools</div>
+                        <div class="feature-copy">Figma · Google Stitch · Loveable AI . Photoshop . Adobe XD</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-title">UI Development</div>
+                        <div class="feature-copy">HTML · CSS · jQuery · Responsive Design . Tailwind CSS · Bootstrap
+                        </div>
                     </div>
                     <div class="feature-item">
-                        <div class="feature-title">Good Catch on Frontend Framework</div>
-                        <div class="feature-copy">React JS · Components · Hooks · Routing</div>
+                        <div class="feature-title">Software Development & CMS Knowledge</div>
+                        <div class="feature-copy">PHP, WordPress, .NET </div>
                     </div>
                     <div class="feature-item">
-                        <div class="feature-title">Styling, UI & Theme</div>
-                        <div class="feature-copy">Tailwind CSS · Bootstrap</div>
+                        <div class="feature-title">Hands on Frontend Framework</div>
+                        <div class="feature-copy">React JS · MongoDB · SQL . GitHub</div>
                     </div>
-                    <div class="feature-item">
-                        <div class="feature-title">Version Control</div>
-                        <div class="feature-copy">Git · GitHub</div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-title">Backend Basics</div>
-                        <div class="feature-copy">Node JS · Express JS</div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-title">Database</div>
-                        <div class="feature-copy">MongoDB · SQL</div>
-                    </div>
+
+
 
                 </div>
                 <!-- <div class="cta-buttons">
@@ -840,6 +833,7 @@
         const heroTypingElement = document.getElementById('hero-typing-text');
         let heroTypingIndex = 0;
         let isDeleting = false;
+        const isMobile = window.innerWidth < 768;
 
         function animateHeroTyping() {
             if (!heroTypingElement) return;
@@ -848,6 +842,10 @@
                 heroTypingElement.textContent = heroTypingText.slice(0, heroTypingIndex + 1);
                 heroTypingIndex += 1;
                 if (heroTypingIndex === heroTypingText.length) {
+                    // Don't loop on mobile, only loop on desktop
+                    if (isMobile) {
+                        return; // Stop animation on mobile
+                    }
                     isDeleting = true;
                     setTimeout(animateHeroTyping, 1800);
                     return;
