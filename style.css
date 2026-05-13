@@ -1,9 +1,13 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Open+Sans:wght@300;400;500;600;700&display=swap");
 
 * {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 :root {
@@ -13,16 +17,25 @@
     --dark: #0f172a;
     --darker: #020617;
     --light: #f8fafc;
-    --gray: #64748b;
+    --gray: #e1e1e1;
     --success: #10b981;
 }
 
 body {
-    font-family: "Space Grotesk", sans-serif;
+    font-family: "Open Sans", sans-serif;
     background: var(--darker);
     color: var(--light);
     overflow-x: hidden;
     position: relative;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Space Grotesk", sans-serif;
 }
 
 .p-0 {
@@ -1076,6 +1089,99 @@ section {
     font-weight: bold;
 }
 
+.skills-overview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 3rem;
+}
+
+.skills-category {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.primary-category {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.secondary-category {
+    border-color: rgba(156, 163, 175, 0.3);
+}
+
+.skills-category h3 {
+    color: var(--light);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.skills-subcategory {
+    margin-bottom: 2rem;
+}
+
+.skills-subcategory h4 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.skills-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.skill-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: 0.3s;
+    border: none;
+    cursor: default;
+}
+
+.skill-btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.skill-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.skill-btn.secondary {
+    background: #6b7280;
+    color: #f9fafb;
+    box-shadow: 0 4px 15px rgba(107, 114, 128, 0.2);
+}
+
+.skill-btn.secondary:hover {
+    background: #4b5563;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107, 114, 128, 0.3);
+}
+
+.skill-desc {
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .skills-overview {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
 .timeline {
     max-width: 1000px;
     margin: 0px auto;
@@ -1201,6 +1307,61 @@ section {
     transform: translateY(-15px) rotateX(5deg);
     border-color: var(--primary);
     box-shadow: rgba(99, 102, 241, 0.4) 0px 40px 100px;
+}
+
+.about-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.about-gallery-item {
+    border-radius: 22px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.about-gallery-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 45px rgba(99, 102, 241, 0.18);
+}
+
+p {
+    line-height: 25px;
+    margin-bottom: 20px;
+}
+
+.about-gallery-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* object-fit: cover;
+    aspect-ratio: 4 / 3; */
+}
+
+.gallery-label {
+    display: block;
+    padding: 0.95rem 1rem;
+    font-weight: 700;
+    color: #eef2ff;
+    background: rgba(15, 23, 42, 0.9);
+    text-align: center;
+    letter-spacing: 0.02em;
+}
+
+@media (max-width: 980px) {
+    .about-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 620px) {
+    .about-gallery {
+        grid-template-columns: 1fr;
+    }
 }
 
 .project-image {
@@ -1444,8 +1605,8 @@ footer {
 
 .portfolio-item img {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: auto;
+    /* object-fit: cover; */
 }
 
 .modal {
@@ -2346,11 +2507,107 @@ ul.shadows li a {
     left: 30px;
 }
 
+.page-dots {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.3);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    display: block;
+}
+
+.dot.active {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.dot:hover {
+    background: var(--primary);
+    transform: scale(1.2);
+}
+
+.dot:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(15, 23, 42, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 1;
+    pointer-events: none;
+}
+
+.dot::after {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.dot:hover::after {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .page-dots {
+        right: 20px;
+        gap: 10px;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    .dot:hover::after {
+        right: 20px;
+        font-size: 0.7rem;
+    }
+}
+
 .floating-card {
     display: none;
 }
 
+div#portfolio-grid {
+    column-count: 4;
+    column-gap: 20px;
+    width: 100%;
+    /* max-width: 1000px; */
+    /* margin: auto; */
+    display: block;
+}
+
+.portfolio-item {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 12px;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+}
+
 @media (max-width: 640px) {
+    div#portfolio-grid {
+        column-count: 2;
+        column-gap: 10px;
+    }
+
     .hero h1 {
         font-size: 2.5rem;
     }
