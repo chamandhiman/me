@@ -50,9 +50,8 @@ export function Hero() {
         <CharReveal
           as="h1"
           delay={0.1}
-          gradient
           text={`Hi, I'm ${person.name}`}
-          className="mt-8 font-display text-[clamp(2.75rem,9vw,7.5rem)] leading-[0.92] font-semibold"
+          className="mt-8 font-display text-[clamp(2.75rem,9vw,7.5rem)] leading-[0.92] font-semibold text-foreground [text-shadow:0_0_60px_color-mix(in_oklab,var(--primary)_35%,transparent)]"
         />
 
         <Reveal delay={0.35}>

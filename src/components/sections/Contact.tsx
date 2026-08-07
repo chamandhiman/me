@@ -1,5 +1,5 @@
 import { Aurora, GridFloor, MouseSpotlight, WireGlobe, Vignette } from "@/components/backgrounds";
-import { CharReveal, Eyebrow, MagneticButton, Reveal, Section } from "@/components/motion-kit";
+import { Eyebrow, MagneticButton, Reveal, Section } from "@/components/motion-kit";
 import { person, socials } from "@/data/portfolio";
 
 export function Contact() {
@@ -19,11 +19,11 @@ export function Contact() {
     >
       <div className="mx-auto max-w-3xl text-center">
         <Eyebrow>Contact</Eyebrow>
-        <CharReveal
-          gradient
-          text="Let's build something worth remembering"
-          className="font-display text-[clamp(2.1rem,5.6vw,4.4rem)] leading-[1.02] font-semibold"
-        />
+        <Reveal>
+          <h2 className="text-gradient font-display text-[clamp(2.1rem,5.6vw,4.4rem)] leading-[1.02] font-semibold">
+            Let&rsquo;s build something worth remembering
+          </h2>
+        </Reveal>
         <Reveal delay={0.2}>
           <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground">
             Based in {person.location}, working with teams worldwide. Send a note and I'll get back
