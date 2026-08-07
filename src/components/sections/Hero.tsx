@@ -50,8 +50,9 @@ export function Hero() {
         <CharReveal
           as="h1"
           delay={0.1}
+          gradient
           text={`Hi, I'm ${person.name}`}
-          className="mt-8 font-display text-[clamp(2.75rem,9vw,7.5rem)] leading-[0.92] font-semibold text-gradient"
+          className="mt-8 font-display text-[clamp(2.75rem,9vw,7.5rem)] leading-[0.92] font-semibold"
         />
 
         <Reveal delay={0.35}>

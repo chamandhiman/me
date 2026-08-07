@@ -20,8 +20,9 @@ export function Contact() {
       <div className="mx-auto max-w-3xl text-center">
         <Eyebrow>Contact</Eyebrow>
         <CharReveal
+          gradient
           text="Let's build something worth remembering"
-          className="font-display text-[clamp(2.1rem,5.6vw,4.4rem)] leading-[1.02] font-semibold text-gradient"
+          className="font-display text-[clamp(2.1rem,5.6vw,4.4rem)] leading-[1.02] font-semibold"
         />
         <Reveal delay={0.2}>
           <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground">

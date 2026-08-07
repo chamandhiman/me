@@ -177,6 +177,17 @@
   animation: shimmer-text 9s var(--ease-lux) infinite;
 }
 
+/* Viewport-anchored gradient so per-character split text shares one ramp. */
+@utility text-gradient-char {
+  background-image: var(--gradient-text);
+  background-attachment: fixed;
+  background-size: 100vw 100vh;
+  background-position: center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 @utility glass-panel {
   background: var(--glass);
   border: 1px solid var(--glass-border);

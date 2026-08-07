@@ -59,11 +59,13 @@ export function CharReveal({
   className,
   delay = 0,
   as: Tag = "h2",
+  gradient = false,
 }: {
   text: string;
   className?: string;
   delay?: number;
   as?: "h1" | "h2" | "h3" | "p";
+  gradient?: boolean;
 }) {
   const words = text.split(" ");
   return (
@@ -75,7 +77,7 @@ export function CharReveal({
             {word.split("").map((ch, ci) => (
               <motion.span
                 key={ci}
-                className="inline-block"
+                className={cn("inline-block", gradient && "text-gradient-char")}
                 initial={{ opacity: 0, y: "0.5em", filter: "blur(10px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-60px" }}
