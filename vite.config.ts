@@ -4,11 +4,6 @@ export default defineConfig({
   vite: {
     base: "/portfolio/",
   },
-  nitro: {
-    prerender: {
-      routes: ["/"],
-    },
-  },
   tanstackStart: {
     server: { entry: "server" },
   },
