@@ -1,14 +1,7 @@
 import { MorphBlobs, GlowOrbs, Vignette } from "@/components/backgrounds";
-import {
-  CharReveal,
-  Eyebrow,
-  ImageReveal,
-  Parallax,
-  Reveal,
-  Section,
-  TiltCard,
-} from "@/components/motion-kit";
-import { about, mockups } from "@/data/portfolio";
+import { CharReveal, Eyebrow, Reveal, Section } from "@/components/motion-kit";
+import { workflowIntro } from "@/data/portfolio";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export function About() {
   return (
@@ -22,98 +15,74 @@ export function About() {
         </>
       }
     >
-      <Eyebrow>About</Eyebrow>
-      <div className="grid gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
-        <div>
-          <CharReveal
-            text={about.sub}
-            className="font-display text-[clamp(1.9rem,4.2vw,3.4rem)] leading-[1.05] font-semibold text-foreground"
-          />
-          <Reveal delay={0.15}>
-            <p className="mt-7 text-base leading-relaxed text-muted-foreground">{about.intro}</p>
-          </Reveal>
+      <Eyebrow>What I Do</Eyebrow>
 
-          <Reveal delay={0.25}>
-            <div className="mt-10">
-              <h3 className="font-mono text-[11px] tracking-[0.3em] text-primary uppercase">
-                Key project — {about.keyProject.title}
-              </h3>
-              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-                {about.keyProject.modules.map((m) => (
-                  <li
-                    key={m.name}
-                    className="glass-panel animated-border rounded-xl px-4 py-3.5"
-                  >
-                    <p className="text-sm font-medium text-foreground">{m.name}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">{m.note}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        </div>
-
-        <div className="space-y-5">
-          {mockups.map((m, i) => (
-            <Parallax key={m.title} distance={26 - i * 8}>
-              <TiltCard intensity={7}>
-                <a
-                  href={m.href}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="glass-panel group block overflow-hidden rounded-2xl"
-                  style={{ boxShadow: "var(--shadow-float)" }}
-                >
-                  <ImageReveal
-                    src={m.src}
-                    alt={`${m.title} interface mockup`}
-                    className="aspect-16/10"
-                    imgClassName="transition-transform duration-[1.4s] group-hover:scale-[1.05]"
-                    delay={i * 0.08}
-                  />
-                  <div className="flex items-center justify-between px-5 py-4">
-                    <span className="text-sm font-medium text-foreground">{m.title}</span>
-                    <span className="font-mono text-[10px] tracking-[0.25em] text-primary uppercase">
-                      Live ↗
-                    </span>
-                  </div>
-                </a>
-              </TiltCard>
-            </Parallax>
-          ))}
-        </div>
+      <div className="max-w-4xl">
+        <CharReveal
+          text={workflowIntro.heading}
+          className="font-display text-[clamp(1.8rem,4vw,3.2rem)] leading-[1.08] font-semibold text-foreground"
+        />
+        <Reveal delay={0.15}>
+          <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted-foreground max-w-3xl">
+            {workflowIntro.sub}
+          </p>
+        </Reveal>
       </div>
 
-      <div className="mt-24 grid gap-10 lg:grid-cols-2">
-        <div>
-          <h3 className="font-display text-2xl font-semibold text-foreground">
-            My role &amp; responsibilities
+      {/* Horizontal Workflow Process Bar */}
+      <Reveal delay={0.3}>
+        <div className="mt-12">
+          <h3 className="font-mono text-xs tracking-[0.25em] text-primary uppercase font-semibold mb-6 flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-primary" />
+            <span>Complete UI Implementation Workflow</span>
           </h3>
-          <div className="mt-6 space-y-5">
-            {about.role.map((p, i) => (
-              <Reveal key={i} delay={i * 0.08}>
-                <p className="border-l border-border pl-5 text-sm leading-relaxed text-muted-foreground">
-                  {p}
+
+          {/* Desktop Horizontal Process Bar */}
+          <div className="hidden lg:grid grid-cols-6 gap-3">
+            {workflowIntro.steps.map((step, idx) => (
+              <div
+                key={step.label}
+                className="relative glass-panel rounded-xl p-4 border border-white/10 backdrop-blur-md hover:border-primary/40 transition-all duration-300 group"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-mono text-xs text-primary font-bold">{step.num}</span>
+                  {idx < workflowIntro.steps.length - 1 && (
+                    <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                  )}
+                </div>
+                <h4 className="font-display text-sm font-semibold text-foreground tracking-tight">
+                  {step.label}
+                </h4>
+                <p className="mt-1 text-[11px] text-muted-foreground leading-snug">
+                  {step.desc}
                 </p>
-              </Reveal>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile & Tablet Vertical Flow */}
+          <div className="grid gap-3 sm:grid-cols-2 lg:hidden">
+            {workflowIntro.steps.map((step) => (
+              <div
+                key={step.label}
+                className="glass-panel rounded-xl p-4 border border-white/10 backdrop-blur-md flex items-start gap-3.5"
+              >
+                <span className="font-mono text-sm text-primary font-bold bg-primary/10 rounded-lg px-2.5 py-1 border border-primary/20">
+                  {step.num}
+                </span>
+                <div>
+                  <h4 className="font-display text-sm font-semibold text-foreground">
+                    {step.label}
+                  </h4>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {step.desc}
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
-        <div>
-          <h3 className="font-display text-2xl font-semibold text-foreground">
-            Featured website design
-          </h3>
-          <div className="mt-6 space-y-5">
-            {about.websiteDesign.map((p, i) => (
-              <Reveal key={i} delay={i * 0.08}>
-                <p className="border-l border-border pl-5 text-sm leading-relaxed text-muted-foreground">
-                  {p}
-                </p>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </div>
+      </Reveal>
     </Section>
   );
 }

@@ -1,66 +1,61 @@
-import { ConnectedParticles, OrbitRings, Vignette } from "@/components/backgrounds";
+import { ConnectedParticles, Vignette } from "@/components/backgrounds";
 import { CharReveal, Eyebrow, Reveal, Section, TiltCard } from "@/components/motion-kit";
-import { orbitSkills, skillGroups } from "@/data/portfolio";
+import { coreCapabilities } from "@/data/portfolio";
 
 export function Skills() {
-  const tiers = ["Primary", "Secondary"] as const;
   return (
     <Section
-      id="skills"
+      id="capabilities"
       backdrop={
         <>
           <ConnectedParticles />
-          <OrbitRings labels={orbitSkills} />
           <Vignette />
         </>
       }
     >
       <Eyebrow>Capabilities</Eyebrow>
       <CharReveal
-        text="Out of all my skills"
-        className="font-display text-[clamp(1.9rem,4.2vw,3.4rem)] leading-[1.05] font-semibold text-foreground"
+        text="Core Capabilities"
+        className="font-display text-[clamp(1.9rem,4vw,3.2rem)] leading-[1.05] font-semibold text-foreground"
       />
       <Reveal delay={0.12}>
-        <p className="mt-5 max-w-xl text-sm text-muted-foreground">
-          Primary and secondary skills overview.
+        <p className="mt-4 max-w-xl text-base text-muted-foreground">
+          What I bring to digital products, teams, and software ecosystems.
         </p>
       </Reveal>
 
-      <div className="mt-14 space-y-12">
-        {tiers.map((tier) => (
-          <div key={tier}>
-            <p className="mb-6 font-mono text-[11px] tracking-[0.3em] text-primary uppercase">
-              {tier} skills
-            </p>
-            <div className="grid gap-5 md:grid-cols-3">
-              {skillGroups
-                .filter((g) => g.tier === tier)
-                .map((group, i) => (
-                  <Reveal key={group.title} delay={i * 0.09}>
-                    <TiltCard intensity={8}>
-                      <div
-                        className="glass-panel animated-border h-full rounded-2xl p-6"
-                        style={{ boxShadow: "var(--shadow-float)" }}
-                      >
-                        <h3 className="font-display text-lg font-semibold text-foreground">
-                          {group.title}
-                        </h3>
-                        <div className="mt-5 flex flex-wrap gap-2">
-                          {group.items.map((item) => (
-                            <span
-                              key={item}
-                              className="rounded-full border border-border bg-secondary/40 px-3 py-1.5 text-xs text-foreground/85 transition-colors duration-300 hover:border-primary/50 hover:text-primary"
-                            >
-                              {item}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </TiltCard>
-                  </Reveal>
-                ))}
-            </div>
-          </div>
+      <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {coreCapabilities.map((cap, i) => (
+          <Reveal key={cap.title} delay={i * 0.08}>
+            <TiltCard intensity={7}>
+              <div className="glass-panel animated-border h-full rounded-2xl p-6 border border-white/10 backdrop-blur-md hover:border-primary/40 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-xs text-primary font-bold bg-primary/10 rounded-lg px-2.5 py-1 border border-primary/20">
+                      {cap.num}
+                    </span>
+                  </div>
+                  <h3 className="font-display text-lg font-bold text-foreground tracking-tight">
+                    {cap.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {cap.desc}
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-white/10 flex flex-wrap gap-1.5">
+                  {cap.tools.map((t) => (
+                    <span
+                      key={t}
+                      className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-foreground/80 font-mono"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </TiltCard>
+          </Reveal>
         ))}
       </div>
     </Section>

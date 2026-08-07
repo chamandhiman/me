@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { GradientLines, GlowOrbs, Vignette } from "@/components/backgrounds";
 import { CharReveal, Eyebrow, Reveal, Section } from "@/components/motion-kit";
 import { experience } from "@/data/portfolio";
+import { Briefcase, ArrowRight } from "lucide-react";
 
 export function Experience() {
   const track = useRef<HTMLDivElement>(null);
@@ -14,7 +15,7 @@ export function Experience() {
 
   return (
     <Section
-      id="experience"
+      id="journey"
       backdrop={
         <>
           <GradientLines />
@@ -25,17 +26,33 @@ export function Experience() {
     >
       <Eyebrow>Journey</Eyebrow>
       <CharReveal
-        text="Professional journey"
-        className="font-display text-[clamp(1.9rem,4.2vw,3.4rem)] leading-[1.05] font-semibold text-foreground"
+        text="8+ Years of Continuous Product Evolution"
+        className="font-display text-[clamp(1.8rem,4vw,3.2rem)] leading-[1.05] font-semibold text-foreground max-w-3xl"
       />
       <Reveal delay={0.12}>
-        <p className="mt-5 max-w-xl text-sm text-muted-foreground">
-          10+ years of creating exceptional digital experiences.
+        <p className="mt-4 max-w-2xl text-base text-muted-foreground">
+          Long-term product experience driving UI design, responsive HTML handoffs, and software modernization.
         </p>
       </Reveal>
 
-      <div ref={track} className="relative mt-16 pl-8 md:pl-14">
-        <div className="absolute top-0 left-0 h-full w-px bg-border md:left-2" />
+      {/* Progression Banner */}
+      <Reveal delay={0.25}>
+        <div className="mt-8 glass-panel rounded-xl p-4 border border-white/10 flex flex-wrap items-center gap-2 text-xs font-mono text-primary font-semibold">
+          <span className="text-foreground">Product Progression:</span>
+          <span>UI/UX Wireframes</span>
+          <ArrowRight className="w-3 h-3 text-muted-foreground" />
+          <span>Responsive HTML</span>
+          <ArrowRight className="w-3 h-3 text-muted-foreground" />
+          <span>Developer Handoff</span>
+          <ArrowRight className="w-3 h-3 text-muted-foreground" />
+          <span>Integration QA</span>
+          <ArrowRight className="w-3 h-3 text-muted-foreground" />
+          <span>Staging Release</span>
+        </div>
+      </Reveal>
+
+      <div ref={track} className="relative mt-12 pl-6 md:pl-10">
+        <div className="absolute top-0 left-0 h-full w-px bg-border/60 md:left-2" />
         <motion.div
           aria-hidden
           style={{ height: beamHeight }}
@@ -51,46 +68,41 @@ export function Experience() {
           />
         </motion.div>
 
-        <div className="space-y-16">
+        <div className="space-y-12">
           {experience.map((job, i) => (
             <Reveal key={job.role + job.period} delay={i * 0.1}>
               <div className="relative">
                 <span
-                  className="absolute top-2 -left-8 h-2.5 w-2.5 rounded-full bg-primary md:-left-[3.1rem]"
+                  className="absolute top-1.5 -left-[1.85rem] h-3 w-3 rounded-full bg-primary md:-left-[2.35rem] border-2 border-background"
                   style={{
-                    boxShadow: "0 0 0 5px color-mix(in oklab, var(--primary) 16%, transparent)",
+                    boxShadow: "0 0 0 4px color-mix(in oklab, var(--primary) 20%, transparent)",
                   }}
                 />
-                <p className="font-mono text-[11px] tracking-[0.3em] text-primary uppercase">
-                  {job.period}
-                </p>
-                <h3 className="mt-3 font-display text-2xl font-semibold text-foreground md:text-3xl">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="font-mono text-xs tracking-wider text-primary uppercase font-bold">
+                    {job.period}
+                  </span>
+                  <span className="text-xs text-muted-foreground font-mono">
+                    {job.company}
+                  </span>
+                </div>
+
+                <h3 className="mt-2 font-display text-xl sm:text-2xl font-semibold text-foreground">
                   {job.role}
                 </h3>
-                <p className="mt-1.5 text-sm text-muted-foreground">
-                  {job.companyHref ? (
-                    <a
-                      href={job.companyHref}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="transition-colors hover:text-primary"
-                    >
-                      {job.company} ↗
-                    </a>
-                  ) : (
-                    job.company
-                  )}
-                </p>
-                <p className="mt-5 max-w-2xl text-sm leading-relaxed text-foreground/75">
+
+                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-foreground/80">
                   {job.summary}
                 </p>
-                <ul className="mt-6 grid gap-3 md:grid-cols-2">
+
+                <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
                   {job.points.map((pt) => (
                     <li
                       key={pt}
-                      className="glass-panel rounded-xl px-4 py-3 text-xs leading-relaxed text-muted-foreground"
+                      className="glass-panel rounded-lg px-3.5 py-2.5 text-xs text-muted-foreground border border-white/10 flex items-start gap-2"
                     >
-                      {pt}
+                      <span className="text-primary font-bold">•</span>
+                      <span>{pt}</span>
                     </li>
                   ))}
                 </ul>

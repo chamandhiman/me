@@ -9,25 +9,25 @@ import {
   Vignette,
 } from "@/components/backgrounds";
 import { CharReveal, MagneticButton, Marquee, Reveal } from "@/components/motion-kit";
-import { person, heroMarquee, stats } from "@/data/portfolio";
+import { person, heroMarquee, heroStats } from "@/data/portfolio";
 import { useRef } from "react";
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 160]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
 
   return (
     <section
       ref={ref}
       id="hero"
-      className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-background px-6 pt-32 pb-24 md:px-10"
+      className="relative isolate flex min-h-[92svh] items-center overflow-hidden bg-background px-6 pt-28 pb-16 md:px-10"
     >
       <Aurora />
       <MeshGradient />
-      <AnimatedGrid size={64} opacity={0.35} />
+      <AnimatedGrid size={64} opacity={0.3} />
       <ParticleField />
       <GlowOrbs count={3} />
       <MouseSpotlight />
@@ -38,12 +38,12 @@ export function Hero() {
         className="relative z-10 mx-auto w-full max-w-6xl"
       >
         <Reveal>
-          <span className="glass-panel inline-flex items-center gap-2.5 rounded-full px-4 py-1.5 font-mono text-[10px] tracking-[0.28em] text-muted-foreground uppercase">
-            <span className="relative flex h-1.5 w-1.5">
+          <span className="glass-panel inline-flex items-center gap-2.5 rounded-full px-4 py-1.5 font-mono text-xs tracking-[0.25em] text-muted-foreground uppercase border border-white/10">
+            <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
             </span>
-            {person.location} — Available for work
+            {person.location} — Available for Projects
           </span>
         </Reveal>
 
@@ -51,48 +51,53 @@ export function Hero() {
           as="h1"
           delay={0.1}
           text={`Hi, I'm ${person.name}`}
-          className="mt-8 font-display text-[clamp(2.75rem,9vw,7.5rem)] leading-[0.92] font-semibold text-foreground [text-shadow:0_0_60px_color-mix(in_oklab,var(--primary)_35%,transparent)]"
+          className="mt-6 font-display text-[clamp(2.5rem,7.5vw,6rem)] leading-[0.95] font-semibold text-foreground [text-shadow:0_0_50px_color-mix(in_oklab,var(--primary)_30%,transparent)]"
         />
 
-        <Reveal delay={0.35}>
-          <p className="mt-6 font-display text-[clamp(1.1rem,2.4vw,1.9rem)] font-light tracking-tight text-foreground/80">
+        <Reveal delay={0.25}>
+          <p className="mt-4 font-display text-[clamp(1.1rem,2.2vw,1.75rem)] font-medium text-primary tracking-tight">
             {person.role}
           </p>
         </Reveal>
 
-        <Reveal delay={0.45}>
-          <p className="mt-6 max-w-2xl text-[0.98rem] leading-relaxed text-muted-foreground">
+        <Reveal delay={0.35}>
+          <p className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-muted-foreground">
             {person.tagline}
           </p>
         </Reveal>
 
-        <Reveal delay={0.6}>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <MagneticButton href="#projects">
-              View selected work
-              <span aria-hidden>→</span>
+        <Reveal delay={0.5}>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <MagneticButton href="#work">
+              View Selected Work
+              <span aria-hidden className="ml-1">→</span>
             </MagneticButton>
             <MagneticButton href="#contact" variant="ghost">
-              Start a conversation
+              Start a Conversation
             </MagneticButton>
           </div>
         </Reveal>
 
-        <Reveal delay={0.75}>
-          <dl className="mt-16 grid max-w-3xl grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4">
-            {stats.map((s) => (
-              <div key={s.label}>
-                <dt className="font-display text-3xl font-semibold text-foreground md:text-4xl">
+        <Reveal delay={0.65}>
+          <dl className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-4xl">
+            {heroStats.map((s) => (
+              <div
+                key={s.label}
+                className="glass-panel rounded-2xl p-4 border border-white/10 backdrop-blur-md hover:border-primary/30 transition-colors"
+              >
+                <dt className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-tight">
                   {s.value}
                 </dt>
-                <dd className="mt-1.5 text-xs leading-snug text-muted-foreground">{s.label}</dd>
+                <dd className="mt-1 text-xs text-muted-foreground font-mono uppercase tracking-wider">
+                  {s.label}
+                </dd>
               </div>
             ))}
           </dl>
         </Reveal>
       </motion.div>
 
-      <div className="absolute inset-x-0 bottom-0 z-10 border-t border-border/60 py-5">
+      <div className="absolute inset-x-0 bottom-0 z-10 border-t border-border/50 py-3 bg-black/20 backdrop-blur-sm">
         <Marquee items={heroMarquee} duration={38} />
       </div>
     </section>

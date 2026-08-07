@@ -68,7 +68,7 @@
   --secondary-foreground: oklch(0.94 0.008 250);
 
   --muted: oklch(0.23 0.024 268);
-  --muted-foreground: oklch(0.68 0.022 260);
+  --muted-foreground: oklch(0.76 0.02 260);
 
   --accent: oklch(0.72 0.17 305);
   --accent-foreground: oklch(0.14 0.02 265);
@@ -134,12 +134,15 @@
   html {
     scroll-behavior: auto;
     -webkit-font-smoothing: antialiased;
+    font-size: 17px;
   }
 
   body {
     background-color: var(--color-ink);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
     overflow-x: hidden;
   }
 

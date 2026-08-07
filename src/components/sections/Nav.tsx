@@ -40,17 +40,17 @@ export function Nav() {
             scrolled ? "glass-panel w-[calc(100%-2rem)]" : "w-[calc(100%-3rem)] bg-transparent",
           )}
         >
-          <a href="#hero" className="font-display text-sm font-semibold tracking-tight">
+          <a href="#hero" className="font-display text-base font-semibold tracking-tight">
             {person.name}
             <span className="text-primary">.</span>
           </a>
 
-          <nav className="hidden items-center gap-7 md:flex">
+          <nav className="hidden items-center gap-6 md:flex">
             {navLinks.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
-                className="relative text-xs tracking-tight text-muted-foreground transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:text-foreground hover:after:origin-left hover:after:scale-x-100"
+                className="relative text-sm font-medium tracking-tight text-muted-foreground transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:text-foreground hover:after:origin-left hover:after:scale-x-100"
               >
                 {l.label}
               </a>
@@ -58,7 +58,7 @@ export function Nav() {
           </nav>
 
           <div className="hidden md:block">
-            <MagneticButton href={`mailto:${person.email}`} variant="ghost" className="px-5 py-2 text-xs">
+            <MagneticButton href={`mailto:${person.email}`} variant="ghost" className="px-5 py-2 text-sm font-medium">
               Get in touch
             </MagneticButton>
           </div>
@@ -96,7 +96,7 @@ export function Nav() {
                 <a
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="block text-sm text-foreground/85"
+                  className="block text-base font-medium text-foreground/90"
                 >
                   {l.label}
                 </a>

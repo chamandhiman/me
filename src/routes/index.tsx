@@ -3,18 +3,16 @@ import { useSmoothScroll } from "@/hooks/use-smooth-scroll";
 import { Nav } from "@/components/sections/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
+import { PortfolioShowcase } from "@/components/sections/PortfolioShowcase";
 import { Skills } from "@/components/sections/Skills";
-import { Projects } from "@/components/sections/Projects";
 import { Experience } from "@/components/sections/Experience";
-import { Services } from "@/components/sections/Services";
-import { Testimonials } from "@/components/sections/Testimonials";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
 import { person } from "@/data/portfolio";
 
-const title = "Chaman Lal — Sr. UX/UI Designer & Front-End Developer";
+const title = "Chaman Lal — UI/UX Designer & Responsive Front-End Developer";
 const description =
-  "Portfolio of Chaman Lal, Sr. UX/UI Designer and Front-End Developer in Chandigarh with 10+ years of experience in UX/UI design, responsive web development and brand identity.";
+  "Portfolio of Chaman Lal, Sr. UI/UX Designer and Front-End Developer with 8+ years of continuous product experience across driving school software ecosystems, enterprise dashboards, and responsive web platforms.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,7 +34,7 @@ export const Route = createFileRoute("/")({
           jobTitle: person.role,
           email: `mailto:${person.email}`,
           address: { "@type": "PostalAddress", addressLocality: person.location },
-          knowsAbout: ["UX Design", "UI Design", "Front-End Development", "Responsive Design", "SEO"],
+          knowsAbout: ["UX Design", "UI Design", "Front-End Development", "Responsive Design", "Legacy Modernization"],
         }),
       },
     ],
@@ -51,15 +49,25 @@ function Index() {
     <div className="dark relative bg-ink text-foreground">
       <Nav />
       <main>
+        {/* 1. HERO */}
         <Hero />
+
+        {/* 2. COMPACT EXPERIENCE INTRO */}
         <About />
+
+        {/* 3. SELECTED WORK / FEATURED PROJECTS (MAIN VISUAL CENTERPIECE) */}
+        <PortfolioShowcase />
+
+        {/* 4. CORE CAPABILITIES */}
         <Skills />
-        <Projects />
+
+        {/* 5. PROFESSIONAL JOURNEY */}
         <Experience />
-        <Services />
-        <Testimonials />
+
+        {/* 6. COMPACT CTA & CONTACT */}
         <Contact />
       </main>
+      {/* 7. FOOTER */}
       <Footer />
     </div>
   );
