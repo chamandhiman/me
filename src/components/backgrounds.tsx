@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 /* ------------------------------------------------------------------ *
  * Shared canvas hook — rAF loop with DPR handling + auto teardown.
- * Pauses automatically when outside viewport or tab hidden.
+ * Pauses automatically when outside viewport, tab hidden, or modal open.
  * ------------------------------------------------------------------ */
 type DrawFn = (ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => void;
 
@@ -26,6 +26,8 @@ function useCanvas(draw: DrawFn, init?: (w: number, h: number) => void) {
     let isTabVisible = document.visibilityState === "visible";
     let prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    const isModalActive = () => document.body.style.overflow === "hidden";
+
     const resize = () => {
       const isMobile = window.innerWidth < 768;
       const maxDpr = isMobile ? 1 : 1.5;
@@ -46,7 +48,7 @@ function useCanvas(draw: DrawFn, init?: (w: number, h: number) => void) {
     const start = performance.now();
 
     const loop = (now: number) => {
-      if (!isVisible || !isTabVisible) {
+      if (!isVisible || !isTabVisible || isModalActive()) {
         raf = 0;
         return;
       }
@@ -62,7 +64,7 @@ function useCanvas(draw: DrawFn, init?: (w: number, h: number) => void) {
     };
 
     const startLoop = () => {
-      if (!raf && isVisible && isTabVisible && !prefersReducedMotion) {
+      if (!raf && isVisible && isTabVisible && !prefersReducedMotion && !isModalActive()) {
         raf = requestAnimationFrame(loop);
       }
     };
@@ -110,6 +112,16 @@ function useCanvas(draw: DrawFn, init?: (w: number, h: number) => void) {
       }
     };
 
+    // Observe body style changes for modal activation (pause background canvas when modal opens)
+    const mo = new MutationObserver(() => {
+      if (isModalActive()) {
+        stopLoop();
+      } else if (isVisible && isTabVisible) {
+        startLoop();
+      }
+    });
+    mo.observe(document.body, { attributes: true, attributeFilter: ["style"] });
+
     document.addEventListener("visibilitychange", onVisibilityChange);
     motionQuery.addEventListener("change", onMotionChange);
 
@@ -117,6 +129,7 @@ function useCanvas(draw: DrawFn, init?: (w: number, h: number) => void) {
       stopLoop();
       ro.disconnect();
       io.disconnect();
+      mo.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);
       motionQuery.removeEventListener("change", onMotionChange);
     };
@@ -257,7 +270,7 @@ export function GlowOrbs({ count = 3 }: { count?: number }) {
 }
 
 /* ------------------------------------------------------------------ *
- * Floating particles (canvas) — adaptive mobile density & paused offscreen
+ * Floating particles (canvas) — adaptive mobile density & paused offscreen/modal
  * ------------------------------------------------------------------ */
 type P = { x: number; y: number; vx: number; vy: number; r: number; a: number };
 

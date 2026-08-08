@@ -195,101 +195,99 @@ export function Projects() {
 
       {/* FULLSCREEN LIGHTBOX MODAL FOR FEATURED PROJECTS */}
       {isMounted &&
-        activeModalIndex !== null &&
-        currentModalProject &&
         createPortal(
-          <AnimatePresence mode="wait">
-            <motion.div
-              key="projects-modal"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={closeModal}
-              className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4 sm:p-6 select-none"
-              aria-modal="true"
-              role="dialog"
-              aria-label="Fullscreen project view"
-            >
-              {/* Modal Top Control Bar */}
-              <div
-                className="absolute top-4 sm:top-6 inset-x-4 sm:inset-x-10 flex items-center justify-between z-[1000000]"
-                onClick={(e) => e.stopPropagation()}
+          <AnimatePresence>
+            {activeModalIndex !== null && currentModalProject && (
+              <motion.div
+                key="projects-modal"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                onClick={closeModal}
+                className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/95 p-4 sm:p-6 select-none"
+                aria-modal="true"
+                role="dialog"
+                aria-label="Fullscreen project view"
               >
-                <div className="flex items-center space-x-3 bg-black/80 border border-white/15 rounded-full px-4 py-2 backdrop-blur-md shadow-2xl">
-                  <span className="font-mono text-xs text-primary font-bold">
-                    {activeModalIndex + 1} / {shownProjects.length}
-                  </span>
-                  <span className="text-white/30 text-xs">|</span>
-                  <span className="text-xs font-medium text-white/90 truncate max-w-[200px] sm:max-w-md">
-                    {currentModalProject?.title}
-                  </span>
+                {/* Modal Top Control Bar */}
+                <div
+                  className="absolute top-4 sm:top-6 inset-x-4 sm:inset-x-10 flex items-center justify-between z-[1000000]"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center space-x-3 bg-black/90 border border-white/15 rounded-full px-4 py-2 shadow-2xl">
+                    <span className="font-mono text-xs text-primary font-bold">
+                      {activeModalIndex + 1} / {shownProjects.length}
+                    </span>
+                    <span className="text-white/30 text-xs">|</span>
+                    <span className="text-xs font-medium text-white/90 truncate max-w-[200px] sm:max-w-md">
+                      {currentModalProject?.title}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      closeModal();
+                    }}
+                    className="rounded-full bg-white/20 hover:bg-white/30 text-white p-3 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white border border-white/20 shadow-2xl cursor-pointer"
+                    aria-label="Close modal"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
                 </div>
+
+                {/* Navigation Arrows inside Modal */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevModalProject();
+                  }}
+                  className="absolute left-3 sm:left-8 top-1/2 -translate-y-1/2 rounded-full bg-black/90 hover:bg-primary text-white p-3 sm:p-3.5 border border-white/15 transition-all duration-200 hover:scale-110 z-[1000000] focus:outline-none focus:ring-2 focus:ring-primary shadow-2xl cursor-pointer"
+                  aria-label="Previous project image"
+                >
+                  <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7" />
+                </button>
 
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    closeModal();
+                    nextModalProject();
                   }}
-                  className="rounded-full bg-white/20 hover:bg-white/30 text-white p-3 backdrop-blur-md transition-all duration-200 hover:rotate-90 focus:outline-none focus:ring-2 focus:ring-white border border-white/20 shadow-2xl cursor-pointer"
-                  aria-label="Close modal"
+                  className="absolute right-3 sm:right-8 top-1/2 -translate-y-1/2 rounded-full bg-black/90 hover:bg-primary text-white p-3 sm:p-3.5 border border-white/15 transition-all duration-200 hover:scale-110 z-[1000000] focus:outline-none focus:ring-2 focus:ring-primary shadow-2xl cursor-pointer"
+                  aria-label="Next project image"
                 >
-                  <X className="w-6 h-6" />
+                  <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7" />
                 </button>
-              </div>
 
-              {/* Navigation Arrows inside Modal */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  prevModalProject();
-                }}
-                className="absolute left-3 sm:left-8 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-primary text-white p-3 sm:p-3.5 backdrop-blur-md border border-white/15 transition-all duration-200 hover:scale-110 z-[1000000] focus:outline-none focus:ring-2 focus:ring-primary shadow-2xl cursor-pointer"
-                aria-label="Previous project image"
-              >
-                <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7" />
-              </button>
+                {/* Modal Image Box */}
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative max-h-[85vh] max-w-[90vw] flex flex-col items-center justify-center rounded-2xl overflow-hidden mt-10 sm:mt-12"
+                >
+                  <img
+                    src={currentModalProject?.src}
+                    alt={currentModalProject?.title}
+                    loading="eager"
+                    decoding="async"
+                    className="max-h-[70vh] sm:max-h-[75vh] max-w-[88vw] w-auto h-auto object-contain rounded-xl shadow-2xl border border-white/10"
+                  />
 
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  nextModalProject();
-                }}
-                className="absolute right-3 sm:right-8 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-primary text-white p-3 sm:p-3.5 backdrop-blur-md border border-white/15 transition-all duration-200 hover:scale-110 z-[1000000] focus:outline-none focus:ring-2 focus:ring-primary shadow-2xl cursor-pointer"
-                aria-label="Next project image"
-              >
-                <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7" />
-              </button>
-
-              {/* Modal Image Box */}
-              <motion.div
-                initial={{ scale: 0.92, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.92, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 300, damping: 28 }}
-                onClick={(e) => e.stopPropagation()}
-                className="relative max-h-[85vh] max-w-[90vw] flex flex-col items-center justify-center rounded-2xl overflow-hidden mt-10 sm:mt-12"
-              >
-                <img
-                  src={currentModalProject?.src}
-                  alt={currentModalProject?.title}
-                  className="max-h-[70vh] sm:max-h-[75vh] max-w-[88vw] w-auto h-auto object-contain rounded-xl shadow-2xl border border-white/10"
-                />
-
-                {/* Bottom Info Bar in Modal */}
-                <div className="mt-3 text-center max-w-xl px-4">
-                  <span className="inline-block rounded-full bg-primary/20 text-primary border border-primary/30 text-[10px] uppercase font-mono px-3 py-1 font-semibold mb-1">
-                    {currentModalProject?.cat}
-                  </span>
-                  <p className="text-xs sm:text-sm text-white/90 font-medium">
-                    {currentModalProject?.title}
-                  </p>
+                  {/* Bottom Info Bar in Modal */}
+                  <div className="mt-3 text-center max-w-xl px-4">
+                    <span className="inline-block rounded-full bg-primary/20 text-primary border border-primary/30 text-[10px] uppercase font-mono px-3 py-1 font-semibold mb-1">
+                      {currentModalProject?.cat}
+                    </span>
+                    <p className="text-xs sm:text-sm text-white/90 font-medium">
+                      {currentModalProject?.title}
+                    </p>
+                  </div>
                 </div>
               </motion.div>
-            </motion.div>
+            )}
           </AnimatePresence>,
           document.body
         )}
