@@ -4,16 +4,18 @@ import { Nav } from "@/components/sections/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { PortfolioShowcase } from "@/components/sections/PortfolioShowcase";
+import { CustomerWebsites } from "@/components/sections/CustomerWebsites";
 import { Skills } from "@/components/sections/Skills";
 import { DevAiWorkflow } from "@/components/sections/DevAiWorkflow";
 import { Experience } from "@/components/sections/Experience";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
+import { BackToTop } from "@/components/BackToTop";
 import { person } from "@/data/portfolio";
 
 const title = "Chaman Lal — UI/UX Designer & Responsive Front-End Developer";
 const description =
-  "Portfolio of Chaman Lal, Sr. UI/UX Designer and Front-End Developer with 8+ years of continuous product experience across driving school software ecosystems, enterprise dashboards, and responsive web platforms.";
+  "Portfolio of Chaman Lal, Sr. UI/UX Designer and Front-End Developer with 10+ years of product experience — 8+ years at Netsmartz on driving school software ecosystems, and 4 years at Kindlebit Solutions on enterprise dashboards and responsive web platforms.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -59,6 +61,9 @@ function Index() {
         {/* 3. SELECTED WORK / FEATURED PROJECTS (MAIN VISUAL CENTERPIECE) */}
         <PortfolioShowcase />
 
+        {/* 3b. CUSTOMER WEBSITE ECOSYSTEM */}
+        <CustomerWebsites />
+
         {/* 4. CORE CAPABILITIES */}
         <Skills />
 
@@ -73,6 +78,7 @@ function Index() {
       </main>
       {/* 7. FOOTER */}
       <Footer />
+      <BackToTop />
     </div>
   );
 }

@@ -23,7 +23,7 @@ export function About() {
           className="font-display text-[clamp(1.8rem,4vw,3.2rem)] leading-[1.08] font-semibold text-foreground"
         />
         <Reveal>
-          <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted-foreground max-w-3xl">
+          <p className="mt-5 text-lg sm:text-xl leading-relaxed text-muted-foreground max-w-3xl">
             {workflowIntro.sub}
           </p>
         </Reveal>
@@ -56,7 +56,7 @@ export function About() {
                   <h4 className="font-display text-sm font-semibold text-foreground tracking-tight group-hover:text-cyan-200 transition-colors">
                     {step.label}
                   </h4>
-                  <p className="mt-1 text-[11px] text-muted-foreground leading-snug group-hover:text-white/80 transition-colors">
+                  <p className="mt-1.5 text-xs sm:text-[13px] text-muted-foreground leading-snug group-hover:text-white/80 transition-colors">
                     {step.desc}
                   </p>
                 </div>

@@ -38,10 +38,10 @@ export const person = {
   name: "Chaman Lal",
   role: "UI/UX Designer & Responsive Front-End Developer",
   tagline:
-    "8+ years of continuous product experience designing, developing, and modernizing web experiences for a large-scale Driving School Software ecosystem.",
+    "10+ years of product experience designing, developing, and modernizing web experiences — 8+ years at Netsmartz on a large-scale Driving School Software, and 4 years at Kindlebit Solutions.",
   location: "Chandigarh, India",
   email: "chamandhiman1988@gmail.com",
-  years: "8+",
+  years: "10+",
 };
 
 export const socials = [
@@ -60,7 +60,7 @@ export const heroMarquee = [
 ];
 
 export const heroStats = [
-  { value: "8+ YEARS", label: "Product Experience" },
+  { value: "10+ YEARS", label: "Product Experience" },
   { value: "UI/UX", label: "Design & Systems" },
   { value: "RESPONSIVE", label: "Front-End HTML/CSS" },
   { value: "LEGACY", label: "Modernization" },
@@ -68,7 +68,7 @@ export const heroStats = [
 
 export const workflowIntro = {
   heading: "Designing the interface. Building the experience.",
-  sub: "For 8+ years, I've worked across the complete UI implementation journey — from wireframes and visual concepts to responsive HTML, developer integration, testing, and continuous improvement of established software products.",
+  sub: "For 10+ years, I've worked across the complete UI implementation journey — from wireframes and visual concepts to responsive HTML, developer integration, testing, and continuous improvement of established software products.",
   steps: [
     { num: "01", label: "WIREFRAME", desc: "User flows & wireframe concepts" },
     { num: "02", label: "UI DESIGN", desc: "High-fidelity visual mockups" },
@@ -137,15 +137,17 @@ export const experience = [
     ],
   },
   {
-    period: "MAR 2013 – AUG 2017",
+    period: "MAR 2013 – AUG 2017 (4 YEARS)",
     role: "UI/UX Designer",
-    company: "IT Solutions",
-    companyHref: null,
+    company: "Kindlebit Solutions Pvt. Ltd.",
+    companyHref: "https://kindlebit.com/",
     summary:
-      "Designed website mockups, mobile app interfaces, and brand creatives for client projects.",
+      "4 years of UI/UX design experience delivering website mockups, mobile app interfaces, and brand creatives for diverse client projects.",
     points: [
-      "Designed website mockups, mobile apps, and digital marketing materials",
+      "Designed website mockups, mobile app UIs, and digital marketing materials for varied client verticals",
       "Handled HTML/CSS front-end development and CMS theme integration",
+      "Collaborated closely with developers to deliver pixel-accurate, responsive designs",
+      "Built visual identity assets including logos, banners, and promotional graphics",
     ],
   },
 ];
@@ -330,7 +332,7 @@ export const projects = [
 
 export const navLinks = [
   { label: "About", href: "#about" },
-  { label: "Work", href: "#work" },
+  { label: "Case Studies", href: "#featured-work" },
   { label: "Capabilities", href: "#capabilities" },
   { label: "Journey", href: "#journey" },
   { label: "Contact", href: "#contact" },

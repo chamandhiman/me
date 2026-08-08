@@ -5,329 +5,705 @@ import {
   ChevronRight,
   Maximize2,
   X,
-  ExternalLink,
+  Layers,
   Sparkles,
+  ArrowRight,
+  CheckCircle2,
+  ExternalLink,
+  Monitor,
+  Smartphone,
+  Tablet,
 } from "lucide-react";
-import { LightRays, MeshGradient, Vignette } from "@/components/backgrounds";
+import { LightRays, Vignette } from "@/components/backgrounds";
+import { ArrowUp } from "lucide-react";
 import { CharReveal, Eyebrow, Reveal, Section } from "@/components/motion-kit";
-import { projectFilters, projects } from "@/data/portfolio";
-import { cn } from "@/lib/utils";
+import { playUISound } from "@/lib/sound";
+
+
+// Laptop case-study screenshots
+import centralizedAdminImg from "@/assests/case-study/centralized_admin.jpg";
+import studentPortalImg from "@/assests/case-study/student_portal.jpg";
+import staffPortalImg from "@/assests/case-study/staff_portal.jpg";
+
+// Dashboard screenshots
+import dmsAppointmentForm from "@/assests/dashboard/dms_appointment_form.png";
+import dmsAppointmentMgmt from "@/assests/dashboard/dms_appointment_mgmt.png";
+import dmsFormStyle from "@/assests/dashboard/dms_form_style.png";
+import dmsGridTable from "@/assests/dashboard/dms_grid_table.png";
+import dmsLogin from "@/assests/dashboard/dms_login.png";
+import dmsPartMaster from "@/assests/dashboard/dms_part_master.png";
+import dmsSidebar from "@/assests/dashboard/dms_sidebar.png";
+
+// iPad screenshots
+import ipadAdvanceFilter from "@/assests/ipad/ipad_Advance_Filter.png";
+import ipadCalender from "@/assests/ipad/ipad_Calender.png";
+import ipadEvaluations from "@/assests/ipad/ipad_Evaluations.png";
+import ipadFiles from "@/assests/ipad/ipad_Files.png";
+import ipadHomeScreen from "@/assests/ipad/ipad_Home_Screen-Upcoming_Schedule.png";
+import ipadNotes from "@/assests/ipad/ipad_Inser_standard_Public_Notes.png";
+import ipadLessonDetails from "@/assests/ipad/ipad_Lesson_Details.png";
+import ipadProcessLesson from "@/assests/ipad/ipad_Process_Lesson.png";
+
+// iPhone screenshots
+import iphoneLoginOTP from "@/assests/iphone/Login-_with-OTP.png";
+import iphoneLoginSchool from "@/assests/iphone/Login-_with-School-ID.png";
+import iphoneNotifications from "@/assests/iphone/Notofications.png";
+import iphoneScreenshot3 from "@/assests/iphone/ios_screenshot_3.png";
+import iphoneMenu from "@/assests/iphone/menu.png";
+
+interface ModalImage {
+  src: string;
+  title: string;
+  category: string;
+}
+
+// -------------------------------------------------------------
+// DATA STRUCTURES FOR PRODUCT CASE STUDIES
+// -------------------------------------------------------------
+
+const drivingSchoolModules = [
+  {
+    id: "admin",
+    num: "01",
+    name: "CENTRALIZED ADMIN",
+    roleLabel: "For School Owners",
+    purpose: "Operations, scheduling & centralized school management console",
+    icon: Monitor,
+    primaryImage: centralizedAdminImg,
+    liveUrl: "https://www.driversed.software/driversed.software/devaccess/DSS2/centralizedAdmin/index.html",
+    gallery: [
+      { src: centralizedAdminImg, title: "Centralized Admin Laptop Console", category: "Admin Console" },
+      { src: dmsAppointmentMgmt, title: "Centralized Appointment Console", category: "Admin Console" },
+      { src: dmsLogin, title: "Admin Portal Authentication", category: "Admin Console" },
+      { src: dmsGridTable, title: "Data Grid & Fleet Management", category: "Admin Console" },
+      { src: dmsAppointmentForm, title: "Scheduling & Booking Form", category: "Admin Console" },
+      { src: dmsPartMaster, title: "System Configuration & Master Data", category: "Admin Console" },
+      { src: dmsSidebar, title: "Navigation & Module Management", category: "Admin Console" },
+    ],
+  },
+  {
+    id: "student",
+    num: "02",
+    name: "STUDENT PORTAL",
+    roleLabel: "For Students",
+    purpose: "Student-facing learning, appointment tracking & account experience",
+    icon: Smartphone,
+    primaryImage: studentPortalImg,
+    liveUrl: "https://www.driversed.software/driversed.software/devaccess/DSS2/centralizedStudentPortal/",
+    gallery: [
+      { src: studentPortalImg, title: "Student Portal Laptop Experience", category: "Student App" },
+      { src: iphoneLoginSchool, title: "Student School ID Authentication", category: "Student App" },
+      { src: iphoneLoginOTP, title: "OTP Security Verification", category: "Student App" },
+      { src: iphoneNotifications, title: "Lesson Reminders & Notifications", category: "Student App" },
+      { src: iphoneMenu, title: "Student Dashboard Navigation", category: "Student App" },
+      { src: iphoneScreenshot3, title: "Lesson Progress & Schedule View", category: "Student App" },
+    ],
+  },
+  {
+    id: "staff",
+    num: "03",
+    name: "STAFF PORTAL",
+    roleLabel: "For School Staff",
+    purpose: "Instructor workflows, mobile evaluations & daily operations",
+    icon: Tablet,
+    primaryImage: staffPortalImg,
+    liveUrl: "https://www.driversed.software/driversed.software/devaccess/DSS2/StaffMobile/index.html",
+    gallery: [
+      { src: staffPortalImg, title: "Staff Portal Laptop Interface", category: "Staff App" },
+      { src: ipadHomeScreen, title: "Instructor Schedule & Daily Roster", category: "Staff App" },
+      { src: ipadLessonDetails, title: "Detailed Lesson Execution", category: "Staff App" },
+      { src: ipadCalender, title: "Interactive Instructor Calendar", category: "Staff App" },
+      { src: ipadEvaluations, title: "Student Evaluation & Scoring", category: "Staff App" },
+      { src: ipadAdvanceFilter, title: "Advanced Student Filtering", category: "Staff App" },
+      { src: ipadProcessLesson, title: "Lesson Processing & Sign-off", category: "Staff App" },
+      { src: ipadFiles, title: "Document & File Attachment Manager", category: "Staff App" },
+      { src: ipadNotes, title: "Public & Internal Instructor Notes", category: "Staff App" },
+    ],
+  },
+];
+
+const productJourneySteps = [
+  "DISCOVERY",
+  "WIREFRAMES",
+  "UI DESIGN",
+  "RESPONSIVE HTML",
+  "DEVELOPER HANDOFF",
+  "INTEGRATION",
+  "STAGING / QA",
+  "CLIENT DEMO",
+  "ITERATION",
+  "LIVE PRODUCT",
+  "CONTINUOUS MODERNIZATION",
+];
+
+const drivingSchoolRoles = [
+  {
+    num: "01",
+    title: "UX / WIREFRAMES",
+    desc: "Create user flows, wireframes and interface concepts before visual development.",
+  },
+  {
+    num: "02",
+    title: "UI DESIGN",
+    desc: "Translate approved concepts into detailed, responsive interface designs.",
+  },
+  {
+    num: "03",
+    title: "RESPONSIVE HTML",
+    desc: "Develop clean, semantic and responsive HTML/CSS implementations from approved designs.",
+  },
+  {
+    num: "04",
+    title: "DEVELOPER HANDOFF",
+    desc: "Provide production-ready HTML mockups and coordinate closely with developers during implementation.",
+  },
+  {
+    num: "05",
+    title: "INTEGRATION SUPPORT",
+    desc: "Work with development teams to ensure UI components work correctly with dynamic backend data.",
+  },
+  {
+    num: "06",
+    title: "QA / UI FIXES",
+    desc: "Identify and resolve UI inconsistencies and visual bugs during development, staging and after deployment.",
+  },
+  {
+    num: "07",
+    title: "CLIENT DEMOS",
+    desc: "Participate in product demonstrations, present completed work and gather feedback.",
+  },
+  {
+    num: "08",
+    title: "ONGOING MODERNIZATION",
+    desc: "Continue improving legacy interfaces and modernizing established product experiences without disrupting existing workflows.",
+  },
+];
+
+const drivingSchoolStack = [
+  { name: "HTML5",            color: "orange" },
+  { name: "CSS3",             color: "blue" },
+  { name: "JavaScript",      color: "yellow" },
+  { name: "jQuery",          color: "cyan" },
+  { name: "Bootstrap",       color: "purple" },
+  { name: "Responsive Design",color: "teal" },
+  { name: "Figma",           color: "pink" },
+  { name: "Photoshop",       color: "indigo" },
+  { name: "GitHub",          color: "slate" },
+  { name: "Jira",            color: "blue" },
+];
+
+const stackColorMap: Record<string, { border: string; bg: string; text: string; icon: string; shadow: string }> = {
+  orange:  { border: "border-orange-400/60",  bg: "bg-orange-950/80",  text: "text-orange-200",  icon: "text-orange-400",  shadow: "shadow-[0_0_14px_rgba(251,146,60,0.35)]" },
+  blue:    { border: "border-blue-400/60",    bg: "bg-blue-950/80",    text: "text-blue-200",    icon: "text-blue-400",    shadow: "shadow-[0_0_14px_rgba(59,130,246,0.35)]" },
+  yellow:  { border: "border-yellow-400/60",  bg: "bg-yellow-950/80",  text: "text-yellow-200",  icon: "text-yellow-400",  shadow: "shadow-[0_0_14px_rgba(234,179,8,0.35)]" },
+  cyan:    { border: "border-cyan-400/60",    bg: "bg-cyan-950/80",    text: "text-cyan-200",    icon: "text-cyan-400",    shadow: "shadow-[0_0_14px_rgba(6,182,212,0.35)]" },
+  purple:  { border: "border-purple-400/60",  bg: "bg-purple-950/80",  text: "text-purple-200",  icon: "text-purple-400",  shadow: "shadow-[0_0_14px_rgba(168,85,247,0.35)]" },
+  teal:    { border: "border-teal-400/60",    bg: "bg-teal-950/80",    text: "text-teal-200",    icon: "text-teal-400",    shadow: "shadow-[0_0_14px_rgba(20,184,166,0.35)]" },
+  pink:    { border: "border-pink-400/60",    bg: "bg-pink-950/80",    text: "text-pink-200",    icon: "text-pink-400",    shadow: "shadow-[0_0_14px_rgba(236,72,153,0.35)]" },
+  indigo:  { border: "border-indigo-400/60",  bg: "bg-indigo-950/80",  text: "text-indigo-200",  icon: "text-indigo-400",  shadow: "shadow-[0_0_14px_rgba(99,102,241,0.35)]" },
+  slate:   { border: "border-slate-400/60",   bg: "bg-slate-800/80",   text: "text-slate-200",   icon: "text-slate-400",   shadow: "shadow-[0_0_14px_rgba(148,163,184,0.25)]" },
+};
+
+const mahindraRoles = [
+  {
+    num: "01",
+    title: "UI / UX DESIGN",
+    desc: "Designed enterprise dashboard interfaces and complex workshop management workflows in Figma.",
+  },
+  {
+    num: "02",
+    title: "INFORMATION ARCHITECTURE",
+    desc: "Structured dense operational information into clear, usable dashboard layouts.",
+  },
+  {
+    num: "03",
+    title: "DATA-HEAVY INTERFACES",
+    desc: "Designed tables, filters, status views, forms, and management screens for complex operational data.",
+  },
+  {
+    num: "04",
+    title: "DESIGN SYSTEM",
+    desc: "Maintained consistent components, spacing, typography, visual hierarchy, and interface patterns across screens.",
+  },
+  {
+    num: "05",
+    title: "WORKFLOW DESIGN",
+    desc: "Translated complex workshop operations into clear dashboard flows and usable interface experiences.",
+  },
+];
+
+const mahindraGallery: ModalImage[] = [
+  { src: dmsGridTable, title: "Enterprise Data Grid & Workshop Management Console", category: "Mahindra Dashboard" },
+  { src: dmsPartMaster, title: "Inventory & Spare Parts Master Console", category: "Mahindra Dashboard" },
+  { src: dmsAppointmentMgmt, title: "Vehicle Service Appointment Manager", category: "Mahindra Dashboard" },
+  { src: dmsAppointmentForm, title: "Service Booking & Repair Order Form", category: "Mahindra Dashboard" },
+];
 
 export function PortfolioShowcase() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All Work");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImages, setModalImages] = useState<ModalImage[]>([]);
+  const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
+  // Initial mount
   useEffect(() => {
     setIsMounted(true);
+    const onScroll = () => {
+      setShowBackToTop(window.scrollY > 450);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const filteredProjects = projects.filter((p) => {
-    if (selectedCategory === "All Work" || selectedCategory === "All") return true;
-    return p.cat === selectedCategory;
-  });
+  const openModalWithGallery = (gallery: ModalImage[], initialIndex = 0) => {
+    setModalImages(gallery);
+    setActiveModalIndex(initialIndex);
+  };
 
-  const total = filteredProjects.length;
+  const closeModal = useCallback(() => {
+    setActiveModalIndex(null);
+  }, []);
 
+  const nextModalImage = useCallback(() => {
+    if (activeModalIndex === null || modalImages.length === 0) return;
+    setActiveModalIndex((prev) => (prev === null ? 0 : (prev + 1) % modalImages.length));
+  }, [activeModalIndex, modalImages.length]);
+
+  const prevModalImage = useCallback(() => {
+    if (activeModalIndex === null || modalImages.length === 0) return;
+    setActiveModalIndex((prev) => (prev === null ? 0 : (prev - 1 + modalImages.length) % modalImages.length));
+  }, [activeModalIndex, modalImages.length]);
+
+  // Handle Keyboard Shortcuts for Modal
   useEffect(() => {
-    setCurrentIndex(0);
-  }, [selectedCategory]);
-
-  const currentItem = filteredProjects[currentIndex] || filteredProjects[0];
-
-  const nextSlide = useCallback(() => {
-    if (total === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % total);
-  }, [total]);
-
-  const prevSlide = useCallback(() => {
-    if (total === 0) return;
-    setCurrentIndex((prev) => (prev - 1 + total) % total);
-  }, [total]);
-
-  useEffect(() => {
+    if (activeModalIndex === null) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isModalOpen) return;
-      if (e.key === "Escape") {
-        setIsModalOpen(false);
-      } else if (e.key === "ArrowRight") {
-        nextSlide();
-      } else if (e.key === "ArrowLeft") {
-        prevSlide();
-      }
+      if (e.key === "Escape") closeModal();
+      if (e.key === "ArrowRight") nextModalImage();
+      if (e.key === "ArrowLeft") prevModalImage();
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isModalOpen, nextSlide, prevSlide]);
+  }, [activeModalIndex, closeModal, nextModalImage, prevModalImage]);
 
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-    };
-  }, [isModalOpen]);
-
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-
-  const minSwipeDistance = 40;
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    if (e.targetTouches && e.targetTouches[0]) {
-      setTouchStart(e.targetTouches[0].clientX);
-    }
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (e.targetTouches && e.targetTouches[0]) {
-      setTouchEnd(e.targetTouches[0].clientX);
-    }
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    if (distance > minSwipeDistance) {
-      nextSlide();
-    } else if (distance < -minSwipeDistance) {
-      prevSlide();
-    }
-  };
+  const currentModalItem = activeModalIndex !== null ? modalImages[activeModalIndex] : null;
 
   return (
-    <Section
-      id="work"
+    <>
+      <Section
       backdrop={
         <>
-          <LightRays count={2} />
-          <MeshGradient opacity={0.25} />
+          <LightRays />
           <Vignette />
         </>
       }
     >
-      <Eyebrow>Selected Works</Eyebrow>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      {/* SECTION HEADER & CASE STUDY NAV CHIPS */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/10">
         <div>
+          <Eyebrow>Product Case Studies</Eyebrow>
           <CharReveal
-            text="Driving School Platform Ecosystem"
+            text="Long-Term Enterprise Products & Platforms"
             className="font-display text-[clamp(1.9rem,4vw,3.2rem)] leading-[1.05] font-semibold text-foreground"
           />
           <Reveal>
             <p className="mt-3 max-w-2xl text-base text-muted-foreground">
-              Production web applications, centralized admin modules, staff iPad portals, and student iOS interfaces designed and integrated over 8+ years.
+              In-depth product case studies featuring long-running SaaS ecosystems and data-dense enterprise dashboards.
             </p>
           </Reveal>
         </div>
 
+        {/* Quick Jump Navigation Chips */}
         <Reveal>
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-xs text-primary font-semibold uppercase tracking-wider bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full">
-              {total} Projects Filtered
-            </span>
+          <div className="flex flex-wrap gap-2.5">
+            <a
+              href="#case-study-driving-school"
+              className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-950/60 px-4 py-2 text-xs font-semibold text-cyan-300 shadow-[0_0_15px_rgba(0,220,255,0.25)] transition-all hover:border-cyan-300 hover:shadow-[0_0_20px_rgba(0,220,255,0.4)]"
+            >
+              <span className="font-mono text-cyan-400 font-bold">01</span>
+              <span>Driving School Software</span>
+            </a>
+            <a
+              href="#case-study-mahindra"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/80 px-4 py-2 text-xs font-semibold text-slate-300 transition-all hover:border-cyan-500/50 hover:text-cyan-200"
+            >
+              <span className="font-mono text-slate-400 font-bold">02</span>
+              <span>Mahindra Dashboard</span>
+            </a>
           </div>
         </Reveal>
       </div>
 
-      {/* FILTER TABS */}
-      <Reveal>
-        <div className="mt-8 flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
-          {projectFilters.map((tab) => {
-            const active = selectedCategory === tab;
-            return (
-              <button
-                key={tab}
-                onClick={() => setSelectedCategory(tab)}
-                className={cn(
-                  "rounded-full px-4 py-2 text-xs font-medium transition-all duration-200 cursor-pointer border",
-                  active
-                    ? "bg-primary text-primary-foreground border-primary shadow-[0_0_15px_rgba(100,210,255,0.4)]"
-                    : "glass-panel text-muted-foreground hover:text-foreground hover:border-primary/40"
-                )}
-              >
-                {tab}
-              </button>
-            );
-          })}
-        </div>
-      </Reveal>
-
-      {/* PRIMARY FEATURED SHOWCASE STAGE */}
-      {currentItem && (
+      {/* ========================================================================= */}
+      {/* CASE STUDY 01: DRIVING SCHOOL SOFTWARE */}
+      {/* ========================================================================= */}
+      <div id="case-study-driving-school" className="mt-14 scroll-mt-28">
         <Reveal>
-          <div className="mt-8 neon-card rounded-2xl p-4 sm:p-6 lg:p-8 relative">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-4 pb-4 border-b border-white/10">
+          <div className="neon-card rounded-3xl p-6 sm:p-8 lg:p-10 border border-cyan-500/30">
+            {/* Header Banner */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-white/10">
               <div>
-                <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-cyan-400 font-bold bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/30 mb-2">
-                  <Sparkles className="w-3 h-3 text-cyan-400" />
-                  {currentItem.cat}
-                </span>
-                <h3 className="font-display text-xl sm:text-2xl font-bold text-foreground">
-                  {currentItem.title}
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="font-mono text-xs text-cyan-400 font-bold bg-cyan-950/80 px-3 py-1 rounded-full border border-cyan-500/40 shadow-[0_0_12px_rgba(0,220,255,0.4)]">
+                    01 • CASE STUDY
+                  </span>
+                  <span className="font-mono text-xs tracking-wider text-cyan-300 uppercase font-semibold">
+                    Long-Term SaaS Product Ecosystem
+                  </span>
+                </div>
+                <h3 className="font-display text-2xl sm:text-4xl font-bold text-foreground tracking-tight">
+                  Driving School Software Ecosystem
                 </h3>
-              </div>
-
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="inline-flex items-center gap-2 rounded-lg bg-cyan-950/70 hover:bg-cyan-900/80 text-cyan-300 px-3.5 py-2 text-xs font-semibold transition-all duration-200 border border-cyan-500/40 hover:shadow-[0_0_15px_rgba(0,220,255,0.4)] cursor-pointer"
-                aria-label="Expand screenshot to full resolution modal"
-              >
-                <Maximize2 className="w-3.5 h-3.5" />
-                <span>View Fullscreen</span>
-              </button>
-            </div>
-
-            {/* Large Screenshot Stage */}
-            <div className="relative min-h-[300px] sm:min-h-[420px] lg:min-h-[520px] w-full flex items-center justify-center overflow-hidden rounded-xl bg-black/60 group border border-white/10">
-              <div
-                onClick={() => setIsModalOpen(true)}
-                className="relative w-full h-full flex items-center justify-center cursor-pointer select-none p-2 sm:p-4"
-              >
-                <img
-                  src={currentItem.src}
-                  alt={currentItem.title}
-                  className="max-h-[280px] sm:max-h-[400px] lg:max-h-[490px] w-auto max-w-full object-contain rounded-lg shadow-2xl transition-all duration-500 ease-out group-hover:scale-[1.03] group-hover:brightness-105"
-                  loading="eager"
-                  decoding="async"
-                />
-              </div>
-
-              {/* Stage Left Arrow */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  prevSlide();
-                }}
-                className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-cyan-500 text-white p-2.5 sm:p-3 border border-white/15 transition-all duration-200 hover:scale-110 z-10 focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-xl cursor-pointer"
-                aria-label="Previous screenshot"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-
-              {/* Stage Right Arrow */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  nextSlide();
-                }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-cyan-500 text-white p-2.5 sm:p-3 border border-white/15 transition-all duration-200 hover:scale-110 z-10 focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-xl cursor-pointer"
-                aria-label="Next screenshot"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Bottom Controls & Info */}
-            <div className="mt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="max-w-2xl">
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  {currentItem.desc || "Interactive screenshot from Driving School Software platform ecosystem."}
+                <p className="mt-3 max-w-3xl text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  A large-scale driving school software ecosystem supporting school operations, instructor scheduling, staff workflows, student management, and online enrollment across multiple connected applications.
                 </p>
-                {currentItem.tags && (
-                  <div className="mt-2.5 flex flex-wrap gap-2">
-                    {currentItem.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="tech-badge"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-                {(currentItem as { href?: string }).href && (
-                  <a
-                    href={(currentItem as { href?: string }).href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:underline"
-                  >
-                    <span>Visit Live Platform</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                )}
+              {/* Verified Product Metrics */}
+              <div className="grid grid-cols-3 gap-3 bg-black/40 p-4 rounded-2xl border border-white/10 shrink-0">
+                <div className="text-center px-2">
+                  <span className="font-display text-xl sm:text-2xl font-bold text-cyan-400 block">8+</span>
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider block mt-0.5">Years Evolution</span>
+                </div>
+                <div className="text-center px-2 border-x border-white/10">
+                  <span className="font-display text-xl sm:text-2xl font-bold text-cyan-400 block">1,000+</span>
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider block mt-0.5">Schools Served</span>
+                </div>
+                <div className="text-center px-2">
+                  <span className="font-display text-xl sm:text-2xl font-bold text-cyan-400 block">3</span>
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider block mt-0.5">Portals</span>
+                </div>
+              </div>
+            </div>
 
-                <div className="flex items-center gap-1.5">
-                  {filteredProjects.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentIndex(idx)}
-                      className={cn(
-                        "h-2.5 rounded-full transition-all duration-200 focus:outline-none cursor-pointer",
-                        idx === currentIndex
-                          ? "w-8 bg-cyan-400 shadow-[0_0_10px_rgba(0,220,255,0.6)]"
-                          : "w-2.5 bg-white/20 hover:bg-white/40"
-                      )}
-                      aria-label={`Go to slide ${idx + 1}`}
-                    />
-                  ))}
+            {/* PRODUCT ECOSYSTEM — 3 CONNECTED PRODUCT MODULES */}
+            <div className="mt-10">
+              <div className="flex items-center justify-between mb-6">
+                <h4 className="font-mono text-sm sm:text-base tracking-[0.2em] text-cyan-400 uppercase font-bold flex items-center gap-2.5">
+                  <Layers className="w-4 sm:w-5 h-4 sm:h-5 text-cyan-400" />
+                  <span>One SaaS Platform • Three Connected Product Portals</span>
+                </h4>
+              </div>
+
+              <div className="grid gap-6 sm:grid-cols-3">
+                {drivingSchoolModules.map((module) => {
+                  const Icon = module.icon;
+                  return (
+                    <div
+                      key={module.id}
+                      className="neon-card group rounded-2xl p-4 flex flex-col justify-between border border-white/10 bg-slate-950/60"
+                    >
+                      <div>
+                        {/* Module Top Bar */}
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="font-mono text-xs text-cyan-400 font-bold bg-cyan-950/80 px-2.5 py-0.5 rounded-md border border-cyan-500/30">
+                            {module.num}
+                          </span>
+                          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
+                            {module.roleLabel}
+                          </span>
+                        </div>
+
+                        {/* Interactive Main Mockup Image */}
+                        <a
+                          href={module.liveUrl}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          onMouseEnter={playUISound}
+                          className="relative aspect-16/10 w-full overflow-hidden rounded-xl bg-black/60 border border-white/10 block mb-4 group/img"
+                        >
+                          <img
+                            src={module.primaryImage}
+                            alt={module.name}
+                            className="w-full h-full object-contain p-1 transition-all duration-500 ease-out group-hover/img:scale-[1.04] group-hover/img:brightness-105"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-cyan-950/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-black/80 px-3 py-1.5 rounded-full border border-cyan-400/50 shadow-lg">
+                              <ExternalLink className="w-3.5 h-3.5 text-cyan-400" />
+                              <span>Open Live Portal ↗</span>
+                            </span>
+                          </div>
+                        </a>
+
+                        <h5 className="font-display text-base sm:text-lg font-bold text-foreground flex items-center gap-2 group-hover:text-cyan-200 transition-colors">
+                          <Icon className="w-4 h-4 text-cyan-400 shrink-0" />
+                          <span>{module.name}</span>
+                        </h5>
+                        <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                          {module.purpose}
+                        </p>
+                      </div>
+
+                      {/* Card Action Bar with External Live Link */}
+                      <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-start">
+                        <a
+                          href={module.liveUrl}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          onMouseEnter={playUISound}
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-300 hover:text-white bg-cyan-950/80 hover:bg-cyan-900 px-3.5 py-1.5 rounded-lg border border-cyan-500/40 transition-all shadow-[0_0_10px_rgba(0,220,255,0.2)]"
+                        >
+                          <span>Live System</span>
+                          <ExternalLink className="w-3.5 h-3.5 text-cyan-400" />
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* PRODUCT LIFECYCLE & ENGAGEMENT PIPELINE */}
+            <div className="mt-12 pt-8 border-t border-white/10">
+              <h4 className="font-mono text-sm sm:text-base tracking-[0.2em] text-cyan-400 uppercase font-bold mb-4 flex items-center gap-2.5">
+                <Sparkles className="w-4 sm:w-5 h-4 sm:h-5 text-cyan-400" />
+                <span>Continuous Product Engagement Lifecycle</span>
+              </h4>
+              <p className="text-xs sm:text-sm text-muted-foreground mb-5 max-w-2xl">
+                My involvement in the product spans the entire delivery lifecycle — ensuring visual consistency, technical feasibility, and continuous modernization over long-term iterations.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-2">
+                {productJourneySteps.map((step, idx) => (
+                  <div key={step} className="flex items-center gap-2">
+                    <span className="font-mono text-[11px] sm:text-xs font-bold bg-cyan-950/70 text-cyan-300 px-3 py-1.5 rounded-lg border border-cyan-500/30 shadow-[0_0_10px_rgba(0,220,255,0.15)] hover:border-cyan-400 hover:text-white transition-all">
+                      {step}
+                    </span>
+                    {idx < productJourneySteps.length - 1 && (
+                      <ArrowRight className="w-3 h-3 text-muted-foreground/50 shrink-0" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* MY ROLE IN THE PRODUCT (8 RESPONSIBILITY BLOCKS) */}
+            <div className="mt-12 pt-8 border-t border-white/10">
+              <h4 className="font-mono text-sm sm:text-base tracking-[0.2em] text-cyan-400 uppercase font-bold mb-6 flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 sm:w-5 h-4 sm:h-5 text-cyan-400" />
+                <span>My Core Role & Responsibilities</span>
+              </h4>
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {drivingSchoolRoles.map((role) => (
+                  <div
+                    key={role.num}
+                    className="neon-card group rounded-xl p-4 border border-white/10 bg-slate-950/40"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-mono text-xs font-bold text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-500/30">
+                        {role.num}
+                      </span>
+                    </div>
+                    <h5 className="font-display text-sm font-bold text-foreground group-hover:text-cyan-200 transition-colors">
+                      {role.title}
+                    </h5>
+                    <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {role.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* LEGACY PRODUCT EXPERIENCE & ENVIRONMENT */}
+            <div className="mt-12 pt-8 border-t border-white/10 grid gap-6 lg:grid-cols-12 items-stretch">
+              {/* Highlighted Legacy Experience Block */}
+              <div className="lg:col-span-7 flex">
+                <div className="neon-card w-full rounded-2xl p-6 border border-cyan-500/30 bg-cyan-950/30 flex flex-col justify-between">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-cyan-400 uppercase tracking-wider block mb-2">
+                      WORKING WITH A LONG-LIVED PRODUCT
+                    </span>
+                    <h5 className="font-display text-lg sm:text-xl font-bold text-foreground">
+                      Modernizing Enterprise Ecosystems
+                    </h5>
+                    <p className="mt-2 text-sm sm:text-base text-slate-200 leading-relaxed">
+                      &quot;Working on a mature software ecosystem has required balancing modernization with existing workflows, legacy interfaces and continuously evolving product requirements.&quot;
+                    </p>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-around font-mono text-xs font-bold text-cyan-300">
+                    <span>LEGACY SYSTEM</span>
+                    <ArrowRight className="w-4 h-4 text-cyan-400" />
+                    <span>MODERN UI</span>
+                    <ArrowRight className="w-4 h-4 text-cyan-400" />
+                    <span>CONTINUOUS EVOLUTION</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Environment / Skills Stack */}
+              <div className="lg:col-span-5 flex">
+                <div className="animated-neon-border ai-neon-card w-full rounded-2xl p-6 border border-cyan-500/30 flex flex-col justify-between overflow-hidden relative">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-cyan-400 uppercase tracking-wider block mb-4 flex items-center gap-2">
+                      <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                      ENVIRONMENT &amp; SKILLS
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {drivingSchoolStack.map((tech) => {
+                        const c = stackColorMap[tech.color as keyof typeof stackColorMap]!;
+                        return (
+                          <span
+                            key={tech.name}
+                            className={`inline-flex items-center gap-1.5 rounded-xl border ${c.border} ${c.bg} px-3 py-1.5 text-xs font-semibold ${c.text} ${c.shadow} transition-all duration-200 hover:scale-105 hover:brightness-110`}
+                          >
+                            <span className={`${c.icon} font-bold text-[10px]`}>◆</span>
+                            {tech.name}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="mt-6 text-[11px] font-mono text-cyan-300/60 border-t border-cyan-500/20 pt-3">
+                    Validated environment stack based on actual production product implementation.
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </Reveal>
-      )}
-
-      {/* SECONDARY COMPACT THUMBNAIL GRID */}
-      <div className="mt-12 max-w-6xl mx-auto">
-        <h4 className="font-mono text-xs tracking-[0.25em] text-cyan-400 uppercase font-bold mb-6">
-          Other Selected Work ({total})
-        </h4>
-
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {filteredProjects.map((proj, idx) => (
-            <div
-              key={proj.id || proj.title}
-              onClick={() => {
-                setCurrentIndex(idx);
-                setIsModalOpen(true);
-              }}
-              className={cn(
-                "neon-card group relative overflow-hidden rounded-xl border border-white/10 cursor-pointer p-2.5 bg-card/20 transition-all duration-200",
-                idx === currentIndex && "border-cyan-400 bg-cyan-950/40 shadow-[0_0_15px_rgba(0,220,255,0.3)]"
-              )}
-            >
-              <div className="relative aspect-16/10 w-full overflow-hidden rounded-lg bg-black/50 flex items-center justify-center p-2">
-                <img
-                  src={proj.src}
-                  alt={proj.title}
-                  className="max-h-full max-w-full object-contain transition-all duration-500 ease-out group-hover:scale-[1.04] group-hover:brightness-105"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <div className="mt-2.5 px-1">
-                <span className="font-mono text-[9px] uppercase tracking-wider text-cyan-400 font-semibold block">
-                  {proj.cat}
-                </span>
-                <h5 className="text-xs font-semibold text-foreground truncate mt-0.5 group-hover:text-cyan-200 transition-colors">
-                  {proj.title}
-                </h5>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
-      {/* FULLSCREEN LIGHTBOX MODAL (Pure CSS & React State) */}
+      {/* ========================================================================= */}
+      {/* CASE STUDY 02: MAHINDRA ENTERPRISE WORKSHOP DASHBOARD */}
+      {/* ========================================================================= */}
+      <div id="case-study-mahindra" className="mt-16 scroll-mt-28">
+        <Reveal>
+          <div className="neon-card rounded-3xl p-6 sm:p-8 lg:p-10 border border-slate-700 bg-slate-950/90">
+            {/* Header Banner */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-white/10">
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="font-mono text-xs text-cyan-300 font-bold bg-slate-800 px-3 py-1 rounded-full border border-slate-600">
+                    02 • ENTERPRISE CASE STUDY
+                  </span>
+                  <span className="font-mono text-xs tracking-wider text-slate-400 uppercase font-semibold">
+                    Workshop Management Dashboard
+                  </span>
+                </div>
+                <h3 className="font-display text-2xl sm:text-4xl font-bold text-foreground tracking-tight">
+                  Mahindra Enterprise Workshop Dashboard
+                </h3>
+                <p className="mt-3 max-w-3xl text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  High-density enterprise dashboard designed for automotive workshop management, vehicle repair order tracking, inventory master tables, and operational workflows.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => openModalWithGallery(mahindraGallery, 0)}
+                  onMouseEnter={playUISound}
+                  className="inline-flex items-center gap-2 rounded-xl bg-cyan-950/80 text-cyan-300 border border-cyan-500/40 px-4 py-2.5 text-xs font-semibold hover:border-cyan-300 hover:shadow-[0_0_15px_rgba(0,220,255,0.3)] transition-all cursor-pointer"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                  <span>View Dashboard Views</span>
+                </button>
+              </div>
+            </div>
+
+            {/* FEATURED DASHBOARD SHOWCASE STAGE */}
+            <div className="mt-8 grid gap-6 lg:grid-cols-12 items-center">
+              {/* Primary Large Dashboard Screenshot */}
+              <div className="lg:col-span-8">
+                <div
+                  onClick={() => openModalWithGallery(mahindraGallery, 0)}
+                  onMouseEnter={playUISound}
+                  className="relative aspect-16/10 w-full overflow-hidden rounded-2xl bg-black/80 border border-white/10 cursor-pointer group"
+                >
+                  <img
+                    src={dmsGridTable}
+                    alt="Mahindra Workshop Management Console"
+                    className="w-full h-full object-contain p-3 transition-all duration-500 ease-out group-hover:scale-[1.02] group-hover:brightness-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-cyan-950/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="inline-flex items-center gap-2 text-xs font-bold text-white bg-black/90 px-4 py-2 rounded-full border border-cyan-400 shadow-xl">
+                      <Maximize2 className="w-4 h-4 text-cyan-400" />
+                      <span>Open Fullscreen Dashboard</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4 Supporting Dashboard Previews */}
+              <div className="lg:col-span-4 grid grid-cols-2 lg:grid-cols-1 gap-3">
+                {mahindraGallery.map((item, idx) => (
+                  <div
+                    key={item.title}
+                    onClick={() => openModalWithGallery(mahindraGallery, idx)}
+                    className="neon-card group rounded-xl p-2.5 border border-white/10 cursor-pointer bg-slate-900/60 flex items-center gap-3"
+                  >
+                    <div className="w-16 h-12 rounded-lg bg-black/60 overflow-hidden shrink-0 border border-white/10">
+                      <img
+                        src={item.src}
+                        alt={item.title}
+                        className="w-full h-full object-contain p-1 group-hover:scale-105 transition-transform"
+                      />
+                    </div>
+                    <div className="overflow-hidden">
+                      <span className="font-mono text-[9px] text-cyan-400 font-bold uppercase block">
+                        {item.category}
+                      </span>
+                      <h5 className="text-xs font-semibold text-foreground truncate mt-0.5 group-hover:text-cyan-200">
+                        {item.title}
+                      </h5>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* MAHINDRA FIGMA CONTRIBUTION */}
+            <div className="mt-12 pt-8 border-t border-white/10">
+              <h4 className="font-mono text-sm sm:text-base tracking-[0.2em] text-cyan-400 uppercase font-bold mb-6 flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 sm:w-5 h-4 sm:h-5 text-cyan-400" />
+                <span>My Contribution — Figma UI/UX Design</span>
+              </h4>
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                {mahindraRoles.map((role) => (
+                  <div
+                    key={role.title}
+                    className="neon-card group rounded-xl p-4 border border-white/10 bg-slate-900/50"
+                  >
+                    <span className="font-mono text-xs font-bold text-cyan-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700 block w-fit mb-2">
+                      {role.num}
+                    </span>
+                    <h5 className="font-display text-xs sm:text-sm font-bold text-foreground group-hover:text-cyan-200 transition-colors">
+                      {role.title}
+                    </h5>
+                    <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {role.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Skills / Tools Used */}
+              <div className="mt-6 pt-5 border-t border-white/10">
+                <p className="font-mono text-xs text-muted-foreground tracking-wide">
+                  <span className="text-cyan-400 font-bold mr-2">TOOLS &amp; SKILLS</span>
+                  Figma · UI/UX Design · Dashboard Design · Enterprise Interfaces · Data-Heavy UI · Design Systems
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* LIGHTWEIGHT FULLSCREEN LIGHTBOX MODAL */}
+      {/* ========================================================================= */}
       {isMounted &&
-        isModalOpen &&
-        currentItem &&
+        activeModalIndex !== null &&
+        currentModalItem &&
         createPortal(
           <div
-            onClick={() => setIsModalOpen(false)}
+            onClick={closeModal}
             className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/95 p-4 sm:p-6 select-none animate-in fade-in-0 transition-opacity duration-200"
             aria-modal="true"
             role="dialog"
@@ -339,12 +715,12 @@ export function PortfolioShowcase() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center space-x-3 bg-black/90 border border-white/15 rounded-full px-4 py-2 shadow-2xl">
-                <span className="font-mono text-xs text-primary font-bold">
-                  {currentIndex + 1} / {total}
+                <span className="font-mono text-xs text-cyan-400 font-bold">
+                  {activeModalIndex + 1} / {modalImages.length}
                 </span>
                 <span className="text-white/30 text-xs">|</span>
                 <span className="text-xs font-medium text-white/90 truncate max-w-[200px] sm:max-w-md">
-                  {currentItem.title}
+                  {currentModalItem.title}
                 </span>
               </div>
 
@@ -352,74 +728,84 @@ export function PortfolioShowcase() {
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setIsModalOpen(false);
+                  closeModal();
                 }}
-                className="rounded-full bg-white/20 hover:bg-white/30 text-white p-3 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white border border-white/20 shadow-2xl cursor-pointer"
-                aria-label="Close modal"
+                className="rounded-full bg-black/90 hover:bg-cyan-500 text-white p-2.5 border border-white/20 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-cyan-400 cursor-pointer"
+                aria-label="Close fullscreen modal"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Left Nav Arrow in Modal */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                prevSlide();
-              }}
-              className="absolute left-3 sm:left-8 top-1/2 -translate-y-1/2 rounded-full bg-black/90 hover:bg-primary text-white p-3 sm:p-3.5 border border-white/15 transition-all duration-200 hover:scale-110 z-[1000000] focus:outline-none focus:ring-2 focus:ring-primary shadow-2xl cursor-pointer"
-              aria-label="Previous project image"
-            >
-              <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7" />
-            </button>
-
-            {/* Right Nav Arrow in Modal */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                nextSlide();
-              }}
-              className="absolute right-3 sm:right-8 top-1/2 -translate-y-1/2 rounded-full bg-black/90 hover:bg-primary text-white p-3 sm:p-3.5 border border-white/15 transition-all duration-200 hover:scale-110 z-[1000000] focus:outline-none focus:ring-2 focus:ring-primary shadow-2xl cursor-pointer"
-              aria-label="Next project image"
-            >
-              <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7" />
-            </button>
-
-            {/* Modal Content Box */}
+            {/* Modal Image Display Stage */}
             <div
+              className="relative max-w-7xl max-h-[85vh] w-full h-full flex items-center justify-center p-2"
               onClick={(e) => e.stopPropagation()}
-              className="relative max-h-[85vh] max-w-[90vw] flex flex-col items-center justify-center rounded-2xl overflow-hidden mt-10 sm:mt-12"
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
             >
               <img
-                src={currentItem.src}
-                alt={currentItem.title}
-                loading="eager"
-                decoding="async"
-                className="max-h-[70vh] sm:max-h-[75vh] max-w-[88vw] w-auto h-auto object-contain rounded-xl shadow-2xl border border-white/10"
+                src={currentModalItem.src}
+                alt={currentModalItem.title}
+                className="max-h-[80vh] w-auto max-w-full object-contain rounded-xl shadow-2xl border border-white/10"
               />
 
-              <div className="mt-3 text-center max-w-xl px-4">
-                <span className="inline-block rounded-full bg-primary/20 text-primary border border-primary/30 text-[10px] uppercase font-mono px-3 py-1 font-semibold mb-1">
-                  {currentItem.cat}
-                </span>
-                <p className="text-xs sm:text-sm text-white/90 font-medium">
-                  {currentItem.title}
-                </p>
-                {currentItem.desc && (
-                  <p className="text-[11px] sm:text-xs text-white/70 mt-0.5">
-                    {currentItem.desc}
-                  </p>
-                )}
+              {/* Prev Navigation Arrow */}
+              {modalImages.length > 1 && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevModalImage();
+                  }}
+                  className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-cyan-500 text-white p-3 border border-white/20 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-2xl cursor-pointer"
+                  aria-label="Previous screenshot"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+              )}
+
+              {/* Next Navigation Arrow */}
+              {modalImages.length > 1 && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextModalImage();
+                  }}
+                  className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-cyan-500 text-white p-3 border border-white/20 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-2xl cursor-pointer"
+                  aria-label="Next screenshot"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              )}
+            </div>
+
+            {/* Modal Bottom Caption */}
+            <div
+              className="absolute bottom-4 sm:bottom-6 inset-x-4 flex justify-center z-[1000000]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-black/90 border border-white/15 rounded-full px-5 py-2 text-center text-xs font-mono text-cyan-300 shadow-2xl">
+                <span>{currentModalItem.category} • Press Esc to Close</span>
               </div>
             </div>
           </div>,
           document.body
         )}
-    </Section>
+      {/* Back to Top Button */}
+<button
+  aria-label="Back to top"
+  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  className={`fixed bottom-7 right-7 md:bottom-7 md:right-7 z-[1000001] flex items-center justify-center rounded-full transition-opacity duration-300 ease-out transform ${showBackToTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
+    bg-black/30 backdrop-blur-sm border border-cyan-400/40 hover:border-purple-400/60 hover:shadow-[0_0_15px_rgba(0,255,255,0.5)]
+    w-12 h-12 md:w-12 md:h-12 sm:w-11 sm:h-11
+    hover:bg-black/40
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400
+  `}
+>
+  <ArrowUp className="w-5 h-5 text-cyan-300" />
+</button>
+
+</Section>
+</>
   );
 }

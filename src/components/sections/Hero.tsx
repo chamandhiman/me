@@ -71,10 +71,10 @@ export function Hero() {
                   key={s.label}
                   className="neon-card rounded-2xl p-3.5"
                 >
-                  <dt className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+                  <dt className="font-display text-sm sm:text-base lg:text-xl font-bold text-foreground tracking-tight leading-tight">
                     {s.value}
                   </dt>
-                  <dd className="mt-1 text-[11px] text-muted-foreground font-mono uppercase tracking-wider">
+                  <dd className="mt-1 text-[10px] sm:text-[11px] text-muted-foreground font-mono uppercase tracking-wider leading-snug">
                     {s.label}
                   </dd>
                 </div>

@@ -3,6 +3,7 @@ import { CharReveal, Eyebrow, Reveal, Section } from "@/components/motion-kit";
 import { experience } from "@/data/portfolio";
 import { ArrowRight } from "lucide-react";
 
+
 export function Experience() {
   return (
     <Section
@@ -17,7 +18,7 @@ export function Experience() {
     >
       <Eyebrow>Journey</Eyebrow>
       <CharReveal
-        text="8+ Years of Continuous Product Evolution"
+        text="10+ Years of Professional Product Experience"
         className="font-display text-[clamp(1.8rem,4vw,3.2rem)] leading-[1.05] font-semibold text-foreground max-w-3xl"
       />
       <Reveal>
@@ -28,7 +29,9 @@ export function Experience() {
 
       {/* Progression Banner */}
       <Reveal>
-        <div className="mt-8 glass-panel neon-glass-card rounded-xl p-4 border border-white/10 flex flex-wrap items-center gap-2 text-xs font-mono text-primary font-semibold">
+        <div
+          className="mt-8 glass-panel neon-glass-card rounded-xl p-4 border border-white/10 flex flex-wrap items-center gap-2 text-xs font-mono text-primary font-semibold"
+        >
           <span className="text-foreground">Product Progression:</span>
           <span>UI/UX Wireframes</span>
           <ArrowRight className="w-3 h-3 text-muted-foreground" />
