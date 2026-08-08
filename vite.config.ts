@@ -4,7 +4,5 @@ export default defineConfig({
   vite: {
     base: "/portfolio/",
   },
-  tanstackStart: {
-    server: { entry: "server" },
-  },
+  nitro: false,
 });
