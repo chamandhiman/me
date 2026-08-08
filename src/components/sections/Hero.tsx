@@ -26,25 +26,26 @@ export function Hero() {
       id="hero"
       className="relative isolate flex min-h-[92svh] items-center overflow-hidden bg-background px-6 pt-28 pb-16 md:px-10"
     >
+      {/* Real Full Hero background image blend */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <img
+          src={chamanImg}
+          alt={person.name}
+          className="h-full w-full object-cover object-right md:object-center filter contrast-[1.03] brightness-95 opacity-90"
+        />
+        {/* Soft edge gradient masks for perfect text contrast on the left */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/75 to-transparent md:w-3/4 lg:w-2/3" />
+        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background/80 to-transparent" />
+      </div>
+
       <Aurora />
-      <MeshGradient />
-      <AnimatedGrid size={64} opacity={0.3} />
+      <MeshGradient opacity={0.4} />
+      <AnimatedGrid size={64} opacity={0.2} />
       <ParticleField />
       <GlowOrbs count={3} />
       <MouseSpotlight />
       <Vignette />
-
-      {/* Full Hero background image blend */}
-      <div className="absolute right-0 top-0 bottom-0 z-0 w-full md:w-3/5 lg:w-1/2 pointer-events-none opacity-90 overflow-hidden">
-        <img
-          src={chamanImg}
-          alt={person.name}
-          className="h-full w-full object-cover object-top filter contrast-[1.05] brightness-95"
-        />
-        {/* Soft edge gradient masks to seamlessly blend image into dark hero backdrop */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
-      </div>
 
       <motion.div
         style={{ y, opacity, scale }}
