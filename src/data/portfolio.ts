@@ -112,6 +112,15 @@ export const coreCapabilities = [
   },
 ];
 
+export const services = [
+  { title: "UI / UX Design", desc: "User flows, wireframes, and visual design systems built for software." },
+  { title: "Responsive Front-End", desc: "Clean HTML5/CSS3 and responsive implementation across every device breakpoint." },
+];
+
+export const testimonials = [
+  { quote: "Outstanding UI/UX design and responsive front-end implementation.", name: "Product Team", role: "Software Ecosystem" },
+];
+
 export const experience = [
   {
     period: "OCT 2017 – PRESENT (8+ YEARS)",

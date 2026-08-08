@@ -85,7 +85,9 @@ export function Projects() {
   }, [activeModalIndex]);
 
   const currentModalProject =
-    activeModalIndex !== null ? shownProjects[activeModalIndex] : null;
+    activeModalIndex !== null && shownProjects[activeModalIndex]
+      ? shownProjects[activeModalIndex]
+      : null;
 
   return (
     <Section
@@ -228,7 +230,7 @@ export function Projects() {
                   </span>
                   <span className="text-white/30 text-xs">|</span>
                   <span className="text-xs font-medium text-white/90 truncate max-w-[200px] sm:max-w-md">
-                    {currentModalProject.title}
+                    {currentModalProject?.title}
                   </span>
                 </div>
 
@@ -280,18 +282,18 @@ export function Projects() {
                 className="relative max-h-[85vh] max-w-[90vw] flex flex-col items-center justify-center rounded-2xl overflow-hidden mt-10 sm:mt-12"
               >
                 <img
-                  src={currentModalProject.src}
-                  alt={currentModalProject.title}
+                  src={currentModalProject?.src}
+                  alt={currentModalProject?.title}
                   className="max-h-[70vh] sm:max-h-[75vh] max-w-[88vw] w-auto h-auto object-contain rounded-xl shadow-2xl border border-white/10"
                 />
 
                 {/* Bottom Info Bar in Modal */}
                 <div className="mt-3 text-center max-w-xl px-4">
                   <span className="inline-block rounded-full bg-primary/20 text-primary border border-primary/30 text-[10px] uppercase font-mono px-3 py-1 font-semibold mb-1">
-                    {currentModalProject.cat}
+                    {currentModalProject?.cat}
                   </span>
                   <p className="text-xs sm:text-sm text-white/90 font-medium">
-                    {currentModalProject.title}
+                    {currentModalProject?.title}
                   </p>
                 </div>
               </motion.div>
