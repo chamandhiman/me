@@ -34,11 +34,23 @@ export function Hero() {
       <MouseSpotlight />
       <Vignette />
 
+      {/* Full Hero background image blend */}
+      <div className="absolute right-0 top-0 bottom-0 z-0 w-full md:w-3/5 lg:w-1/2 pointer-events-none opacity-90 overflow-hidden">
+        <img
+          src={chamanImg}
+          alt={person.name}
+          className="h-full w-full object-cover object-top filter contrast-[1.05] brightness-95"
+        />
+        {/* Soft edge gradient masks to seamlessly blend image into dark hero backdrop */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
+      </div>
+
       <motion.div
         style={{ y, opacity, scale }}
-        className="relative z-10 mx-auto w-full max-w-7xl grid grid-cols-1 items-center gap-10 lg:grid-cols-12"
+        className="relative z-10 mx-auto w-full max-w-6xl"
       >
-        <div className="lg:col-span-7">
+        <div className="max-w-3xl">
           <Reveal>
             <span className="glass-panel inline-flex items-center gap-2.5 rounded-full px-4 py-1.5 font-mono text-xs tracking-[0.25em] text-muted-foreground uppercase border border-white/10">
               <span className="relative flex h-2 w-2">
@@ -96,22 +108,6 @@ export function Hero() {
                 </div>
               ))}
             </dl>
-          </Reveal>
-        </div>
-
-        <div className="relative col-span-1 flex justify-center lg:col-span-5 lg:justify-end">
-          <Reveal delay={0.3}>
-            <div className="relative group max-w-md lg:max-w-none">
-              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary/30 to-accent/30 blur-2xl opacity-50 group-hover:opacity-80 transition duration-700" />
-              <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl shadow-2xl">
-                <img
-                  src={chamanImg}
-                  alt={person.name}
-                  className="h-auto w-full object-cover max-h-[520px] object-top transition duration-500 hover:scale-[1.02]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-30" />
-              </div>
-            </div>
           </Reveal>
         </div>
       </motion.div>
