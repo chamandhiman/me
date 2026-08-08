@@ -260,105 +260,7 @@
 }
 
 @utility noise-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.035;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@keyframes spin-angle {
-  to {
-    --angle: 360deg;
-  }
-}
-
-@keyframes shimmer-text {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes aurora-drift {
-  0% {
-    transform: translate3d(-4%, -2%, 0) scale(1.05) rotate(0deg);
-  }
-  33% {
-    transform: translate3d(5%, 3%, 0) scale(1.15) rotate(6deg);
-  
-  }
-  66% {
-    transform: translate3d(-2%, 5%, 0) scale(1.1) rotate(-5deg);
-  }
-  100% {
-    transform: translate3d(-4%, -2%, 0) scale(1.05) rotate(0deg);
-  }
-}
-
-@keyframes blob-morph {
-  0%,
-  100% {
-    border-radius: 46% 54% 62% 38% / 52% 44% 56% 48%;
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-  }
-  33% {
-    border-radius: 64% 36% 38% 62% / 42% 62% 38% 58%;
-    transform: translate3d(6%, -5%, 0) rotate(40deg) scale(1.12);
-  }
-  66% {
-    border-radius: 38% 62% 54% 46% / 62% 38% 62% 38%;
-    transform: translate3d(-5%, 6%, 0) rotate(-30deg) scale(0.94);
-  }
-}
-
-@keyframes orbit-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes float-y {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-18px);
-  }
-}
-
-@keyframes ray-sweep {
-  0% {
-    opacity: 0;
-    transform: translateX(-30%) rotate(var(--tilt, 14deg));
-  }
-  40% {
-    opacity: 0.55;
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(130%) rotate(var(--tilt, 14deg));
-  }
-}
-
-@keyframes beam-travel {
-  0% {
-    transform: translateY(-110%);
-  }
-  100% {
-    transform: translateY(110%);
-  }
+  display: none;
 }
 
 @keyframes marquee-x {
@@ -367,22 +269,6 @@
   }
   to {
     transform: translateX(-50%);
-  }
-}
-
-@keyframes grid-scroll {
-  to {
-    background-position: 0 var(--grid-size, 48px);
-  }
-}
-
-@keyframes pulse-soft {
-  0%,
-  100% {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.7;
   }
 }
 
