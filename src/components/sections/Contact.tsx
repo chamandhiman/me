@@ -43,20 +43,20 @@ export function Contact() {
 
         <Reveal>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 max-w-xl mx-auto">
-            <div className="glass-panel neon-glass-card rounded-2xl p-5 border border-white/10 flex items-center justify-center gap-3">
-              <MapPin className="w-5 h-5 text-primary" />
+            <div className="neon-card rounded-2xl p-5 flex items-center justify-center gap-3">
+              <MapPin className="w-5 h-5 text-cyan-400" />
               <div className="text-left">
-                <dt className="font-mono text-[10px] tracking-[0.25em] text-primary uppercase font-bold">
+                <dt className="font-mono text-[10px] tracking-[0.25em] text-cyan-400 uppercase font-bold">
                   Location
                 </dt>
                 <dd className="text-sm text-foreground font-medium">{person.location}</dd>
               </div>
             </div>
 
-            <div className="glass-panel neon-glass-card rounded-2xl p-5 border border-white/10 flex items-center justify-center gap-3">
-              <Mail className="w-5 h-5 text-primary" />
+            <div className="neon-card rounded-2xl p-5 flex items-center justify-center gap-3">
+              <Mail className="w-5 h-5 text-cyan-400" />
               <div className="text-left">
-                <dt className="font-mono text-[10px] tracking-[0.25em] text-primary uppercase font-bold">
+                <dt className="font-mono text-[10px] tracking-[0.25em] text-cyan-400 uppercase font-bold">
                   Email
                 </dt>
                 <dd className="text-sm text-foreground font-medium truncate max-w-[200px] sm:max-w-xs">{person.email}</dd>
@@ -73,7 +73,7 @@ export function Contact() {
                 href={s.href}
                 target={s.href.startsWith("http") ? "_blank" : undefined}
                 rel="noreferrer noopener"
-                className="glass-panel neon-glass-card rounded-full px-5 py-2 text-xs font-medium tracking-tight text-muted-foreground transition-all duration-200 hover:text-primary border border-white/10"
+                className="tech-badge px-5 py-2 rounded-full cursor-pointer"
               >
                 {s.label}
               </a>

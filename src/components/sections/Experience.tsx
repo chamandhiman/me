@@ -73,7 +73,7 @@ export function Experience() {
                   {job.points.map((pt) => (
                     <li
                       key={pt}
-                      className="glass-panel neon-glass-card rounded-lg px-3.5 py-2.5 text-xs text-muted-foreground border border-white/10 flex items-start gap-2"
+                      className="neon-card rounded-xl px-3.5 py-2.5 text-xs text-muted-foreground flex items-start gap-2"
                     >
                       <span className="text-primary font-bold">•</span>
                       <span>{pt}</span>

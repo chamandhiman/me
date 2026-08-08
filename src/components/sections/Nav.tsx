@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { navLinks, person } from "@/data/portfolio";
-import { MagneticButton } from "@/components/motion-kit";
 import { cn } from "@/lib/utils";
 
 export function Nav() {
@@ -30,13 +29,13 @@ export function Nav() {
     >
       <div
         className={cn(
-          "mx-auto flex max-w-6xl items-center justify-between rounded-full px-5 py-2.5 transition-all duration-300 md:px-6",
-          scrolled ? "glass-panel neon-glass-card w-[calc(100%-2rem)]" : "w-[calc(100%-3rem)] bg-transparent",
+          "mx-auto flex max-w-6xl items-center justify-between rounded-full px-5 py-2.5 transition-all duration-300 md:px-6 nav-bar-pill",
+          scrolled ? "nav-bar-scrolled w-[calc(100%-2rem)]" : "w-[calc(100%-3rem)]",
         )}
       >
-        <a href="#hero" className="font-display text-base font-semibold tracking-tight">
+        <a href="#hero" className="font-display text-base font-semibold tracking-tight nav-logo">
           {person.name}
-          <span className="text-primary">.</span>
+          <span className="text-cyan-400">.</span>
         </a>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -44,7 +43,7 @@ export function Nav() {
             <a
               key={l.href}
               href={l.href}
-              className="relative text-sm font-medium tracking-tight text-muted-foreground transition-colors duration-300 hover:text-foreground"
+              className="nav-link-animated text-sm font-medium tracking-tight"
             >
               {l.label}
             </a>
@@ -52,16 +51,19 @@ export function Nav() {
         </nav>
 
         <div className="hidden md:block">
-          <MagneticButton href={`mailto:${person.email}`} variant="ghost" className="px-5 py-2 text-sm font-medium">
+          <a
+            href={`mailto:${person.email}`}
+            className="nav-cta-btn"
+          >
             Get in touch
-          </MagneticButton>
+          </a>
         </div>
 
         <button
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle navigation"
           aria-expanded={open}
-          className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 md:hidden"
+          className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 md:hidden cursor-pointer"
         >
           <span
             className={cn(
@@ -80,7 +82,7 @@ export function Nav() {
 
       <nav
         className={cn(
-          "glass-panel neon-glass-card mx-4 mt-3 rounded-2xl p-5 md:hidden transition-all duration-300",
+          "nav-bar-pill mx-4 mt-3 rounded-2xl p-5 md:hidden transition-all duration-300 shadow-2xl",
           open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-3 pointer-events-none absolute inset-x-0"
         )}
       >
@@ -90,7 +92,7 @@ export function Nav() {
               <a
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="block text-base font-medium text-foreground/90 hover:text-primary"
+                className="nav-link-animated block text-base font-medium"
               >
                 {l.label}
               </a>

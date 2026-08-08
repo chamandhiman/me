@@ -27,26 +27,26 @@ export function Skills() {
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {coreCapabilities.map((cap) => (
           <Reveal key={cap.title}>
-            <div className="glass-panel neon-glass-card h-full rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+            <div className="neon-card group h-full rounded-2xl p-6 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="font-mono text-xs text-primary font-bold bg-primary/10 rounded-lg px-2.5 py-1 border border-primary/20">
+                  <span className="font-mono text-xs text-cyan-400 font-bold bg-cyan-950/60 rounded-lg px-2.5 py-1 border border-cyan-500/30 group-hover:shadow-[0_0_12px_rgba(0,220,255,0.4)] transition-all">
                     {cap.num}
                   </span>
                 </div>
-                <h3 className="font-display text-lg font-bold text-foreground tracking-tight">
+                <h3 className="font-display text-lg font-bold text-foreground tracking-tight group-hover:text-cyan-200 transition-colors">
                   {cap.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground group-hover:text-white/80 transition-colors">
                   {cap.desc}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-white/10 flex flex-wrap gap-1.5">
+              <div className="mt-6 pt-4 border-t border-white/10 flex flex-wrap gap-2">
                 {cap.tools.map((t) => (
                   <span
                     key={t}
-                    className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-foreground/80 font-mono"
+                    className="tech-badge"
                   >
                     {t}
                   </span>

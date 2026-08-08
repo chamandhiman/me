@@ -69,7 +69,7 @@ export function Hero() {
               {heroStats.map((s) => (
                 <div
                   key={s.label}
-                  className="glass-panel neon-glass-card rounded-2xl p-3.5 border border-white/10"
+                  className="neon-card rounded-2xl p-3.5"
                 >
                   <dt className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-tight">
                     {s.value}

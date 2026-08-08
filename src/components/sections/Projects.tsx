@@ -118,25 +118,25 @@ export function Projects() {
           <Reveal key={p.title + i}>
             <div
               onClick={() => openModal(i)}
-              className="glass-panel neon-glass-card group relative overflow-hidden rounded-3xl cursor-pointer border border-white/10"
+              className="neon-card group relative overflow-hidden rounded-3xl cursor-pointer border border-white/10"
             >
               <figure className="relative h-full flex flex-col justify-between">
-                <div className="relative aspect-16/10 w-full overflow-hidden bg-black/40 p-3 flex items-center justify-center">
+                <div className="relative aspect-16/10 w-full overflow-hidden bg-black/50 p-3 flex items-center justify-center">
                   <img
                     src={p.src}
                     alt={p.title}
                     loading="lazy"
                     decoding="async"
-                    className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                    className="max-h-full max-w-full object-contain transition-all duration-500 ease-out group-hover:scale-[1.04] group-hover:brightness-105"
                   />
                 </div>
 
-                <figcaption className="p-4 bg-black/20 border-t border-white/5 flex items-center justify-between gap-3">
+                <figcaption className="p-4 bg-black/30 border-t border-white/10 flex items-center justify-between gap-3">
                   <div>
-                    <p className="font-mono text-xs tracking-[0.18em] text-primary uppercase font-bold">
+                    <p className="font-mono text-xs tracking-[0.18em] text-cyan-400 uppercase font-bold">
                       {p.cat}
                     </p>
-                    <p className="mt-0.5 text-base font-semibold text-foreground truncate max-w-[220px] sm:max-w-[260px]">
+                    <p className="mt-0.5 text-base font-semibold text-foreground truncate max-w-[220px] sm:max-w-[260px] group-hover:text-cyan-200 transition-colors">
                       {p.title}
                     </p>
                   </div>

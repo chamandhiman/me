@@ -10,7 +10,7 @@ export function About() {
       backdrop={
         <>
           <MorphBlobs />
-          <GlowOrbs count={2} />
+          <GlowOrbs />
           <Vignette />
         </>
       }
@@ -32,8 +32,8 @@ export function About() {
       {/* Horizontal Workflow Process Bar */}
       <Reveal>
         <div className="mt-12">
-          <h3 className="font-mono text-xs tracking-[0.25em] text-primary uppercase font-semibold mb-6 flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-primary" />
+          <h3 className="font-mono text-xs tracking-[0.25em] text-cyan-400 uppercase font-semibold mb-6 flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-cyan-400" />
             <span>Complete UI Implementation Workflow</span>
           </h3>
 
@@ -42,20 +42,24 @@ export function About() {
             {workflowIntro.steps.map((step, idx) => (
               <div
                 key={step.label}
-                className="relative glass-panel neon-glass-card rounded-xl p-4 border border-white/10 transition-all duration-200 group"
+                className="neon-card rounded-2xl p-4 transition-all duration-300 group flex flex-col justify-between"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-mono text-xs text-primary font-bold">{step.num}</span>
-                  {idx < workflowIntro.steps.length - 1 && (
-                    <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
-                  )}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-mono text-xs text-cyan-400 font-bold bg-cyan-950/60 px-2 py-0.5 rounded-md border border-cyan-500/30 group-hover:shadow-[0_0_10px_rgba(0,220,255,0.4)] transition-all">
+                      {step.num}
+                    </span>
+                    {idx < workflowIntro.steps.length - 1 && (
+                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
+                    )}
+                  </div>
+                  <h4 className="font-display text-sm font-semibold text-foreground tracking-tight group-hover:text-cyan-200 transition-colors">
+                    {step.label}
+                  </h4>
+                  <p className="mt-1 text-[11px] text-muted-foreground leading-snug group-hover:text-white/80 transition-colors">
+                    {step.desc}
+                  </p>
                 </div>
-                <h4 className="font-display text-sm font-semibold text-foreground tracking-tight">
-                  {step.label}
-                </h4>
-                <p className="mt-1 text-[11px] text-muted-foreground leading-snug">
-                  {step.desc}
-                </p>
               </div>
             ))}
           </div>
@@ -65,9 +69,9 @@ export function About() {
             {workflowIntro.steps.map((step) => (
               <div
                 key={step.label}
-                className="glass-panel neon-glass-card rounded-xl p-4 border border-white/10 flex items-start gap-3.5"
+                className="neon-card rounded-2xl p-4 flex items-start gap-3.5"
               >
-                <span className="font-mono text-sm text-primary font-bold bg-primary/10 rounded-lg px-2.5 py-1 border border-primary/20">
+                <span className="font-mono text-sm text-cyan-400 font-bold bg-cyan-950/60 rounded-lg px-2.5 py-1 border border-cyan-500/30">
                   {step.num}
                 </span>
                 <div>

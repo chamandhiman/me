@@ -164,11 +164,11 @@ export function PortfolioShowcase() {
       {/* PRIMARY FEATURED SHOWCASE STAGE */}
       {currentItem && (
         <Reveal>
-          <div className="mt-8 glass-panel neon-glass-card rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/10 relative">
+          <div className="mt-8 neon-card rounded-2xl p-4 sm:p-6 lg:p-8 relative">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-4 pb-4 border-b border-white/10">
               <div>
-                <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-primary font-bold bg-primary/10 px-3 py-1 rounded-full border border-primary/20 mb-2">
-                  <Sparkles className="w-3 h-3 text-primary" />
+                <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-cyan-400 font-bold bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/30 mb-2">
+                  <Sparkles className="w-3 h-3 text-cyan-400" />
                   {currentItem.cat}
                 </span>
                 <h3 className="font-display text-xl sm:text-2xl font-bold text-foreground">
@@ -178,7 +178,7 @@ export function PortfolioShowcase() {
 
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1.5 text-xs font-semibold transition-all duration-200 border border-primary/25 hover:shadow-[0_0_15px_rgba(100,210,255,0.3)] cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-lg bg-cyan-950/70 hover:bg-cyan-900/80 text-cyan-300 px-3.5 py-2 text-xs font-semibold transition-all duration-200 border border-cyan-500/40 hover:shadow-[0_0_15px_rgba(0,220,255,0.4)] cursor-pointer"
                 aria-label="Expand screenshot to full resolution modal"
               >
                 <Maximize2 className="w-3.5 h-3.5" />
@@ -187,7 +187,7 @@ export function PortfolioShowcase() {
             </div>
 
             {/* Large Screenshot Stage */}
-            <div className="relative min-h-[300px] sm:min-h-[420px] lg:min-h-[520px] w-full flex items-center justify-center overflow-hidden rounded-xl bg-black/50 group border border-white/5">
+            <div className="relative min-h-[300px] sm:min-h-[420px] lg:min-h-[520px] w-full flex items-center justify-center overflow-hidden rounded-xl bg-black/60 group border border-white/10">
               <div
                 onClick={() => setIsModalOpen(true)}
                 className="relative w-full h-full flex items-center justify-center cursor-pointer select-none p-2 sm:p-4"
@@ -195,7 +195,7 @@ export function PortfolioShowcase() {
                 <img
                   src={currentItem.src}
                   alt={currentItem.title}
-                  className="max-h-[280px] sm:max-h-[400px] lg:max-h-[490px] w-auto max-w-full object-contain rounded-lg shadow-2xl transition-transform duration-300 group-hover:scale-[1.015]"
+                  className="max-h-[280px] sm:max-h-[400px] lg:max-h-[490px] w-auto max-w-full object-contain rounded-lg shadow-2xl transition-all duration-500 ease-out group-hover:scale-[1.03] group-hover:brightness-105"
                   loading="eager"
                   decoding="async"
                 />
@@ -207,7 +207,7 @@ export function PortfolioShowcase() {
                   e.stopPropagation();
                   prevSlide();
                 }}
-                className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-primary text-white p-2.5 sm:p-3 border border-white/15 transition-all duration-200 hover:scale-110 z-10 focus:outline-none focus:ring-2 focus:ring-primary shadow-xl cursor-pointer"
+                className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-cyan-500 text-white p-2.5 sm:p-3 border border-white/15 transition-all duration-200 hover:scale-110 z-10 focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-xl cursor-pointer"
                 aria-label="Previous screenshot"
               >
                 <ChevronLeft className="w-5 h-5" />
@@ -219,7 +219,7 @@ export function PortfolioShowcase() {
                   e.stopPropagation();
                   nextSlide();
                 }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-primary text-white p-2.5 sm:p-3 border border-white/15 transition-all duration-200 hover:scale-110 z-10 focus:outline-none focus:ring-2 focus:ring-primary shadow-xl cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-cyan-500 text-white p-2.5 sm:p-3 border border-white/15 transition-all duration-200 hover:scale-110 z-10 focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-xl cursor-pointer"
                 aria-label="Next screenshot"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -233,11 +233,11 @@ export function PortfolioShowcase() {
                   {currentItem.desc || "Interactive screenshot from Driving School Software platform ecosystem."}
                 </p>
                 {currentItem.tags && (
-                  <div className="mt-2.5 flex flex-wrap gap-1.5">
+                  <div className="mt-2.5 flex flex-wrap gap-2">
                     {currentItem.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="font-mono text-[10px] bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full text-foreground/80"
+                        className="tech-badge"
                       >
                         {tag}
                       </span>
@@ -252,7 +252,7 @@ export function PortfolioShowcase() {
                     href={(currentItem as { href?: string }).href}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:underline"
                   >
                     <span>Visit Live Platform</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -267,7 +267,7 @@ export function PortfolioShowcase() {
                       className={cn(
                         "h-2.5 rounded-full transition-all duration-200 focus:outline-none cursor-pointer",
                         idx === currentIndex
-                          ? "w-8 bg-primary shadow-[0_0_10px_rgba(100,210,255,0.5)]"
+                          ? "w-8 bg-cyan-400 shadow-[0_0_10px_rgba(0,220,255,0.6)]"
                           : "w-2.5 bg-white/20 hover:bg-white/40"
                       )}
                       aria-label={`Go to slide ${idx + 1}`}
@@ -282,7 +282,7 @@ export function PortfolioShowcase() {
 
       {/* SECONDARY COMPACT THUMBNAIL GRID */}
       <div className="mt-12 max-w-6xl mx-auto">
-        <h4 className="font-mono text-xs tracking-[0.25em] text-primary uppercase font-bold mb-6">
+        <h4 className="font-mono text-xs tracking-[0.25em] text-cyan-400 uppercase font-bold mb-6">
           Other Selected Work ({total})
         </h4>
 
@@ -295,24 +295,24 @@ export function PortfolioShowcase() {
                 setIsModalOpen(true);
               }}
               className={cn(
-                "glass-panel neon-glass-card group relative overflow-hidden rounded-xl border border-white/10 cursor-pointer p-2.5 bg-card/20 hover:border-primary/50 transition-all duration-200",
-                idx === currentIndex && "border-primary bg-primary/10 shadow-[0_0_15px_rgba(100,210,255,0.25)]"
+                "neon-card group relative overflow-hidden rounded-xl border border-white/10 cursor-pointer p-2.5 bg-card/20 transition-all duration-200",
+                idx === currentIndex && "border-cyan-400 bg-cyan-950/40 shadow-[0_0_15px_rgba(0,220,255,0.3)]"
               )}
             >
-              <div className="relative aspect-16/10 w-full overflow-hidden rounded-lg bg-black/40 flex items-center justify-center p-2">
+              <div className="relative aspect-16/10 w-full overflow-hidden rounded-lg bg-black/50 flex items-center justify-center p-2">
                 <img
                   src={proj.src}
                   alt={proj.title}
-                  className="max-h-full max-w-full object-contain transition-transform duration-200 group-hover:scale-105"
+                  className="max-h-full max-w-full object-contain transition-all duration-500 ease-out group-hover:scale-[1.04] group-hover:brightness-105"
                   loading="lazy"
                   decoding="async"
                 />
               </div>
               <div className="mt-2.5 px-1">
-                <span className="font-mono text-[9px] uppercase tracking-wider text-primary font-semibold block">
+                <span className="font-mono text-[9px] uppercase tracking-wider text-cyan-400 font-semibold block">
                   {proj.cat}
                 </span>
-                <h5 className="text-xs font-semibold text-foreground truncate mt-0.5">
+                <h5 className="text-xs font-semibold text-foreground truncate mt-0.5 group-hover:text-cyan-200 transition-colors">
                   {proj.title}
                 </h5>
               </div>

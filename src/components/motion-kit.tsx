@@ -101,11 +101,11 @@ export function MagneticButton({
   className?: string;
 }) {
   const base =
-    "group relative inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-medium tracking-tight transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer";
+    "group relative inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-semibold tracking-tight transition-all duration-200 hover:-translate-y-1 active:translate-y-0 cursor-pointer";
   const look =
     variant === "solid"
-      ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(100,210,255,0.35)]"
-      : "glass-panel text-foreground hover:text-primary hover:border-primary/50 hover:shadow-[0_0_25px_rgba(100,210,255,0.25)]";
+      ? "bg-gradient-to-r from-cyan-400 via-cyan-500 to-blue-600 text-slate-950 border border-cyan-300/50 shadow-[0_0_20px_rgba(0,220,255,0.35)] hover:shadow-[0_0_35px_rgba(0,220,255,0.65)]"
+      : "neon-card text-foreground hover:text-cyan-300 hover:border-cyan-400/60 hover:shadow-[0_0_25px_rgba(0,220,255,0.3)]";
 
   if (href) {
     return (
@@ -136,7 +136,7 @@ export function TiltCard({
   return (
     <div
       style={style}
-      className={cn("neon-glass-card relative overflow-hidden rounded-3xl", className)}
+      className={cn("neon-card relative overflow-hidden rounded-3xl", className)}
     >
       {children}
     </div>

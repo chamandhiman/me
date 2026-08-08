@@ -39,10 +39,10 @@ export function DevAiWorkflow() {
         {/* Left Area: Development & Interests */}
         <div className="lg:col-span-6 flex">
           <Reveal className="w-full">
-            <div className="glass-panel neon-glass-card h-full rounded-2xl p-6 sm:p-8 border border-white/10 flex flex-col justify-between">
+            <div className="neon-card group h-full rounded-2xl p-6 sm:p-8 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-5">
-                  <span className="font-mono text-xs text-primary font-bold bg-primary/10 rounded-lg px-2.5 py-1 border border-primary/20">
+                  <span className="font-mono text-xs text-cyan-400 font-bold bg-cyan-950/60 rounded-lg px-2.5 py-1 border border-cyan-500/30 group-hover:shadow-[0_0_12px_rgba(0,220,255,0.4)] transition-all">
                     01
                   </span>
                   <span className="text-xs font-mono tracking-wider text-muted-foreground uppercase">
@@ -50,10 +50,10 @@ export function DevAiWorkflow() {
                   </span>
                 </div>
 
-                <h3 className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+                <h3 className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-tight group-hover:text-cyan-200 transition-colors">
                   Building beyond the interface
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground group-hover:text-white/80 transition-colors">
                   Alongside UI/UX and responsive front-end development, I&apos;m continuously expanding my development skills by building React applications and exploring modern web technologies.
                 </p>
 
@@ -63,9 +63,9 @@ export function DevAiWorkflow() {
                     return (
                       <div
                         key={tech.name}
-                        className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs sm:text-sm font-medium text-foreground/90 transition-all duration-200 hover:border-primary/40 hover:bg-primary/10 hover:-translate-y-0.5"
+                        className="tech-badge"
                       >
-                        <Icon className="h-3.5 w-3.5 text-primary" />
+                        <Icon className="h-3.5 w-3.5 text-cyan-400" />
                         <span>{tech.name}</span>
                       </div>
                     );
@@ -80,13 +80,13 @@ export function DevAiWorkflow() {
           </Reveal>
         </div>
 
-        {/* Right Area: AI-Assisted Development (STRONGEST NEON CARD) */}
+        {/* Right Area: AI-Assisted Development (STRONGEST ANIMATED NEON CARD) */}
         <div className="lg:col-span-6 flex">
           <Reveal className="w-full">
-            <div className="ai-neon-card relative group h-full rounded-2xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden">
+            <div className="animated-neon-border ai-neon-card relative group h-full rounded-2xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden">
               <div>
                 <div className="flex items-center justify-between mb-5">
-                  <span className="font-mono text-xs text-cyan-300 font-bold bg-cyan-500/20 rounded-lg px-2.5 py-1 border border-cyan-400/30 shadow-[0_0_12px_rgba(6,182,212,0.4)]">
+                  <span className="font-mono text-xs text-cyan-300 font-bold bg-cyan-500/20 rounded-lg px-2.5 py-1 border border-cyan-400/40 shadow-[0_0_15px_rgba(6,182,212,0.5)]">
                     02
                   </span>
                   <span className="inline-flex items-center gap-1.5 text-xs font-mono tracking-wider text-cyan-300 uppercase">
@@ -95,28 +95,28 @@ export function DevAiWorkflow() {
                   </span>
                 </div>
 
-                <h3 className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+                <h3 className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-tight group-hover:text-cyan-100 transition-colors">
                   Building faster with AI
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-300">
+                <p className="mt-3 text-sm leading-relaxed text-slate-300 group-hover:text-white transition-colors">
                   I use AI-assisted coding tools as development companions for exploring ideas, writing code faster, debugging, learning unfamiliar concepts, and accelerating implementation.
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-2.5">
-                  <div className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/50 bg-cyan-950/70 px-3.5 py-2 text-xs sm:text-sm font-semibold text-cyan-200 shadow-[0_0_16px_rgba(6,182,212,0.3)] transition-all duration-200 hover:border-cyan-300 hover:scale-105">
+                  <div className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/60 bg-cyan-950/80 px-3.5 py-2 text-xs sm:text-sm font-semibold text-cyan-200 shadow-[0_0_18px_rgba(6,182,212,0.4)] transition-all duration-200 hover:border-cyan-300 hover:scale-105 hover:bg-cyan-900/90">
                     <span className="text-cyan-400 font-bold">✦</span> Antigravity
                   </div>
-                  <div className="inline-flex items-center gap-2 rounded-xl border border-purple-400/50 bg-purple-950/70 px-3.5 py-2 text-xs sm:text-sm font-semibold text-purple-200 shadow-[0_0_16px_rgba(168,85,247,0.3)] transition-all duration-200 hover:border-purple-300 hover:scale-105">
+                  <div className="inline-flex items-center gap-2 rounded-xl border border-purple-400/60 bg-purple-950/80 px-3.5 py-2 text-xs sm:text-sm font-semibold text-purple-200 shadow-[0_0_18px_rgba(168,85,247,0.4)] transition-all duration-200 hover:border-purple-300 hover:scale-105 hover:bg-purple-900/90">
                     <span className="text-purple-400 font-bold">◉</span> Cursor
                   </div>
-                  <div className="inline-flex items-center gap-2 rounded-xl border border-blue-400/50 bg-blue-950/70 px-3.5 py-2 text-xs sm:text-sm font-semibold text-blue-200 shadow-[0_0_16px_rgba(59,130,246,0.3)] transition-all duration-200 hover:border-blue-300 hover:scale-105">
+                  <div className="inline-flex items-center gap-2 rounded-xl border border-blue-400/60 bg-blue-950/80 px-3.5 py-2 text-xs sm:text-sm font-semibold text-blue-200 shadow-[0_0_18px_rgba(59,130,246,0.4)] transition-all duration-200 hover:border-blue-300 hover:scale-105 hover:bg-blue-900/90">
                     <span className="text-blue-400 font-bold">⚡</span> GitHub Copilot
                   </div>
                 </div>
               </div>
 
               <div className="mt-8 pt-4 border-t border-cyan-500/30 text-[11px] sm:text-xs font-mono text-cyan-300 flex items-center gap-2">
-                <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
+                <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#38bdf8]" />
                 <span>AI-assisted coding • Faster prototyping • Debugging • Learning • Problem solving</span>
               </div>
             </div>
