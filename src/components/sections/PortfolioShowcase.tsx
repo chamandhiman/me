@@ -24,10 +24,7 @@ export function PortfolioShowcase() {
   }, []);
 
   const filteredProjects = projects.filter((p) => {
-    if (selectedCategory === "All Work") return true;
-    if (selectedCategory === "Web Apps") return p.cat === "Web App" || p.cat === "Saas App";
-    if (selectedCategory === "iPad Solutions") return p.cat === "iPad App";
-    if (selectedCategory === "Mobile Apps") return p.cat === "iOS App" || p.cat === "Mobile Portal";
+    if (selectedCategory === "All Work" || selectedCategory === "All") return true;
     return p.cat === selectedCategory;
   });
 

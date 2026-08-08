@@ -36,9 +36,6 @@ export function Projects() {
 
   const shownProjects = projects.filter((p) => {
     if (filter === "All Work" || filter === "All") return true;
-    if (filter === "Web Apps") return p.cat === "Web App" || p.cat === "Saas App";
-    if (filter === "iPad Solutions") return p.cat === "iPad App";
-    if (filter === "Mobile Apps") return p.cat === "iOS App" || p.cat === "Mobile Portal";
     return p.cat === filter;
   });
 
