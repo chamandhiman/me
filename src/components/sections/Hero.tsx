@@ -36,7 +36,7 @@ export function Hero() {
 
           <CharReveal
             as="h1"
-            text={`Hi, I'm ${person.name}`}
+            text={`Hi, I'm ${person.name.split(' ')[0]}`}
             className="mt-6 font-display text-[clamp(2.5rem,6.5vw,5.5rem)] leading-[0.95] font-semibold text-foreground [text-shadow:0_0_50px_color-mix(in_oklab,var(--primary)_30%,transparent)]"
           />
 
