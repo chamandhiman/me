@@ -251,7 +251,8 @@ export function PortfolioShowcase() {
                   src={currentItem?.src}
                   alt={currentItem?.title}
                   className="max-h-[280px] sm:max-h-[400px] lg:max-h-[490px] w-auto max-w-full object-contain rounded-lg shadow-2xl transition-transform duration-500 group-hover:scale-[1.015]"
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
                 />
 
                 {/* Hover Click to Expand Overlay */}
@@ -365,6 +366,7 @@ export function PortfolioShowcase() {
                   alt={proj.title}
                   className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                   <Maximize2 className="w-4 h-4 text-primary" />

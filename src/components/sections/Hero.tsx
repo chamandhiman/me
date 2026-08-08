@@ -22,6 +22,8 @@ export function Hero() {
         <img
           src={chamanImg}
           alt={person.name}
+          fetchPriority="high"
+          decoding="async"
           className="h-full w-full object-cover object-[85%_15%] sm:object-[82%_20%] lg:object-right"
         />
         {/* Responsive dark gradient overlay for text readability on mobile */}
