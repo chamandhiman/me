@@ -1,147 +1,12 @@
-import { useEffect, useRef } from "react";
-
 /* ------------------------------------------------------------------ *
- * Shared canvas hook — rAF loop with DPR handling + auto teardown.
- * Pauses automatically when outside viewport, tab hidden, or modal open.
+ * Pure CSS Ambient Backdrops — 0 JavaScript, 0 rAF loops.
+ * Lightweight, GPU-accelerated cinematic dark neon atmospheres.
  * ------------------------------------------------------------------ */
-type DrawFn = (ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => void;
-
-function useCanvas(draw: DrawFn, init?: (w: number, h: number) => void) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  const drawRef = useRef(draw);
-  const initRef = useRef(init);
-  drawRef.current = draw;
-  initRef.current = init;
-
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let raf = 0;
-    let w = 0;
-    let h = 0;
-    let isVisible = false;
-    let isTabVisible = document.visibilityState === "visible";
-    let prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    const isModalActive = () => document.body.style.overflow === "hidden";
-
-    const resize = () => {
-      const isMobile = window.innerWidth < 768;
-      const maxDpr = isMobile ? 1 : 1.5;
-      const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
-      const rect = canvas.getBoundingClientRect();
-      w = Math.max(rect.width, 1);
-      h = Math.max(rect.height, 1);
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      initRef.current?.(w, h);
-    };
-
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(canvas);
-
-    const start = performance.now();
-
-    const loop = (now: number) => {
-      if (!isVisible || !isTabVisible || isModalActive()) {
-        raf = 0;
-        return;
-      }
-      ctx.clearRect(0, 0, w, h);
-      drawRef.current(ctx, w, h, (now - start) / 1000);
-
-      if (prefersReducedMotion) {
-        raf = 0;
-        return;
-      }
-
-      raf = requestAnimationFrame(loop);
-    };
-
-    const startLoop = () => {
-      if (!raf && isVisible && isTabVisible && !prefersReducedMotion && !isModalActive()) {
-        raf = requestAnimationFrame(loop);
-      }
-    };
-
-    const stopLoop = () => {
-      if (raf) {
-        cancelAnimationFrame(raf);
-        raf = 0;
-      }
-    };
-
-    // IntersectionObserver for Viewport Visibility (Pause off-screen)
-    const io = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        isVisible = entry?.isIntersecting ?? false;
-        if (isVisible) {
-          startLoop();
-        } else {
-          stopLoop();
-        }
-      },
-      { threshold: 0.05 }
-    );
-    io.observe(canvas);
-
-    // Tab visibility change listener
-    const onVisibilityChange = () => {
-      isTabVisible = document.visibilityState === "visible";
-      if (isTabVisible && isVisible) {
-        startLoop();
-      } else {
-        stopLoop();
-      }
-    };
-
-    // Prefers reduced motion change listener
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onMotionChange = (e: MediaQueryListEvent) => {
-      prefersReducedMotion = e.matches;
-      if (prefersReducedMotion) {
-        stopLoop();
-      } else if (isVisible && isTabVisible) {
-        startLoop();
-      }
-    };
-
-    // Observe body style changes for modal activation (pause background canvas when modal opens)
-    const mo = new MutationObserver(() => {
-      if (isModalActive()) {
-        stopLoop();
-      } else if (isVisible && isTabVisible) {
-        startLoop();
-      }
-    });
-    mo.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
-    motionQuery.addEventListener("change", onMotionChange);
-
-    return () => {
-      stopLoop();
-      ro.disconnect();
-      io.disconnect();
-      mo.disconnect();
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-      motionQuery.removeEventListener("change", onMotionChange);
-    };
-  }, []);
-
-  return ref;
-}
 
 const layer = "pointer-events-none absolute inset-0 overflow-hidden";
 
 /* ------------------------------------------------------------------ *
- * Aurora — animated multi-orb gradient wash (CSS, GPU cheap)
+ * Aurora — animated multi-orb gradient wash (Pure CSS)
  * ------------------------------------------------------------------ */
 export function Aurora({ intensity = 1 }: { intensity?: number }) {
   return (
@@ -165,7 +30,7 @@ export function Aurora({ intensity = 1 }: { intensity?: number }) {
 }
 
 /* ------------------------------------------------------------------ *
- * Mesh gradient — slow-moving conic mesh
+ * Mesh gradient — slow-moving conic mesh (Pure CSS)
  * ------------------------------------------------------------------ */
 export function MeshGradient({ opacity = 0.45 }: { opacity?: number }) {
   return (
@@ -184,7 +49,7 @@ export function MeshGradient({ opacity = 0.45 }: { opacity?: number }) {
 }
 
 /* ------------------------------------------------------------------ *
- * Animated grid — perspective-free scrolling grid
+ * Animated grid — perspective-free scrolling grid (Pure CSS)
  * ------------------------------------------------------------------ */
 export function AnimatedGrid({
   size = 56,
@@ -215,7 +80,7 @@ export function AnimatedGrid({
 }
 
 /* ------------------------------------------------------------------ *
- * Grid floor — 3D perspective floor for contact section
+ * Grid floor — 3D perspective floor (Pure CSS)
  * ------------------------------------------------------------------ */
 export function GridFloor() {
   return (
@@ -239,7 +104,7 @@ export function GridFloor() {
 }
 
 /* ------------------------------------------------------------------ *
- * Glow orbs — soft floating light sources
+ * Glow orbs — soft floating light sources (Pure CSS)
  * ------------------------------------------------------------------ */
 export function GlowOrbs({ count = 3 }: { count?: number }) {
   const orbs = Array.from({ length: count }, (_, i) => ({
@@ -270,260 +135,55 @@ export function GlowOrbs({ count = 3 }: { count?: number }) {
 }
 
 /* ------------------------------------------------------------------ *
- * Floating particles (canvas) — adaptive mobile density & paused offscreen/modal
+ * Floating dots / Particle field — Pure CSS float
  * ------------------------------------------------------------------ */
-type P = { x: number; y: number; vx: number; vy: number; r: number; a: number };
-
-export function ParticleField({ density = 0.00006 }: { density?: number }) {
-  const particles = useRef<P[]>([]);
-  const ref = useCanvas(
-    (ctx, w, h) => {
-      const list = particles.current;
-      for (let i = 0; i < list.length; i++) {
-        const p = list[i];
-        if (!p) continue;
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < -10) p.x = w + 10;
-        if (p.x > w + 10) p.x = -10;
-        if (p.y < -10) p.y = h + 10;
-        if (p.y > h + 10) p.y = -10;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(190, 225, 255, ${p.a})`;
-        ctx.fill();
-      }
-    },
-    (w, h) => {
-      const isMobile = w < 768;
-      const maxCount = isMobile ? 30 : 70;
-      const n = Math.min(maxCount, Math.max(18, Math.round(w * h * density)));
-      particles.current = Array.from({ length: n }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: -0.05 - Math.random() * 0.25,
-        r: Math.random() * 1.5 + 0.3,
-        a: Math.random() * 0.4 + 0.1,
-      }));
-    },
-  );
-  return <canvas ref={ref} className={`${layer} h-full w-full`} aria-hidden />;
+export function ParticleField() {
+  return <FloatingDots count={25} />;
 }
 
-/* ------------------------------------------------------------------ *
- * Connected particles / constellation (canvas) — O(n) distance optimization
- * ------------------------------------------------------------------ */
-export function ConnectedParticles({ nodes }: { nodes?: number }) {
-  const pts = useRef<P[]>([]);
-  const ref = useCanvas(
-    (ctx, w, h) => {
-      const list = pts.current;
-      for (let i = 0; i < list.length; i++) {
-        const p = list[i];
-        if (!p) continue;
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-      }
-
-      const thresholdSq = 130 * 130;
-      for (let i = 0; i < list.length; i++) {
-        const a = list[i];
-        if (!a) continue;
-        for (let j = i + 1; j < list.length; j++) {
-          const b = list[j];
-          if (!b) continue;
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const distSq = dx * dx + dy * dy;
-          if (distSq < thresholdSq) {
-            const dist = Math.sqrt(distSq);
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(140, 210, 255, ${(1 - dist / 130) * 0.14})`;
-            ctx.lineWidth = 0.7;
-            ctx.stroke();
-          }
-        }
-        ctx.beginPath();
-        ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(210, 235, 255, ${a.a})`;
-        ctx.fill();
-      }
-    },
-    (w, h) => {
-      const isMobile = w < 768;
-      const count = nodes ?? (isMobile ? 18 : 32);
-      pts.current = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        r: Math.random() * 1.4 + 0.6,
-        a: Math.random() * 0.35 + 0.2,
-      }));
-    },
-  );
-  return <canvas ref={ref} className={`${layer} h-full w-full`} aria-hidden />;
-}
-
-/* ------------------------------------------------------------------ *
- * Animated waves (canvas) — footer horizon
- * ------------------------------------------------------------------ */
-export function WaveField() {
-  const ref = useCanvas((ctx, w, h, t) => {
-    const isMobile = w < 768;
-    const bands = isMobile ? 3 : 5;
-    for (let b = 0; b < bands; b++) {
-      ctx.beginPath();
-      const baseY = h * (0.45 + b * 0.1);
-      const step = isMobile ? 12 : 8;
-      for (let x = 0; x <= w; x += step) {
-        const y =
-          baseY +
-          Math.sin(x * 0.006 + t * (0.5 + b * 0.16) + b) * (14 + b * 6) +
-          Math.sin(x * 0.013 - t * 0.4 + b) * 7;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.strokeStyle = `rgba(${120 + b * 14}, ${200 - b * 10}, 255, ${0.22 - b * 0.03})`;
-      ctx.lineWidth = 1.1;
-      ctx.stroke();
-    }
-  });
-  return <canvas ref={ref} className={`${layer} h-full w-full`} aria-hidden />;
-}
-
-/* ------------------------------------------------------------------ *
- * Interactive wireframe globe (canvas, contact)
- * ------------------------------------------------------------------ */
-export function WireGlobe() {
-  const mouse = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const isMobile = window.innerWidth < 768 || "ontouchstart" in window;
-    if (isMobile) return;
-
-    const onMove = (e: MouseEvent) => {
-      mouse.current = {
-        x: (e.clientX / window.innerWidth - 0.5) * 2,
-        y: (e.clientY / window.innerHeight - 0.5) * 2,
-      };
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
-
-  const ref = useCanvas((ctx, w, h, t) => {
-    const isMobile = w < 768;
-    const cx = w / 2;
-    const cy = h / 2;
-    const R = Math.min(w, h) * 0.34;
-    const rotY = t * 0.28 + mouse.current.x * 0.8;
-    const tilt = 0.42 + mouse.current.y * 0.25;
-
-    const project = (lat: number, lon: number) => {
-      const x = Math.cos(lat) * Math.cos(lon + rotY);
-      const y = Math.sin(lat);
-      const z = Math.cos(lat) * Math.sin(lon + rotY);
-      const y2 = y * Math.cos(tilt) - z * Math.sin(tilt);
-      const z2 = y * Math.sin(tilt) + z * Math.cos(tilt);
-      return { x: cx + x * R, y: cy + y2 * R, z: z2 };
-    };
-
-    ctx.lineWidth = 0.8;
-    const latSteps = isMobile ? 6 : 10;
-    const lonSteps = isMobile ? 12 : 18;
-
-    for (let i = 1; i < latSteps; i++) {
-      const lat = -Math.PI / 2 + (i * Math.PI) / latSteps;
-      ctx.beginPath();
-      for (let lon = 0; lon <= Math.PI * 2 + 0.1; lon += 0.18) {
-        const p = project(lat, lon);
-        const alpha = p.z > 0 ? 0.3 : 0.09;
-        ctx.strokeStyle = `rgba(150, 215, 255, ${alpha})`;
-        if (lon === 0) ctx.moveTo(p.x, p.y);
-        else {
-          ctx.lineTo(p.x, p.y);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-        }
-      }
-    }
-    for (let j = 0; j < lonSteps; j++) {
-      const lon = (j * Math.PI * 2) / lonSteps;
-      ctx.beginPath();
-      for (let lat = -Math.PI / 2; lat <= Math.PI / 2 + 0.05; lat += 0.18) {
-        const p = project(lat, lon);
-        ctx.strokeStyle = `rgba(190, 160, 255, ${p.z > 0 ? 0.22 : 0.07})`;
-        if (lat === -Math.PI / 2) ctx.moveTo(p.x, p.y);
-        else {
-          ctx.lineTo(p.x, p.y);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-        }
-      }
-    }
-    // Chandigarh marker (approx 30.7N, 76.8E)
-    const marker = project((30.7 * Math.PI) / 180, (76.8 * Math.PI) / 180);
-    if (marker.z > -0.2) {
-      const pulse = 3 + Math.sin(t * 3) * 1.6;
-      ctx.beginPath();
-      ctx.arc(marker.x, marker.y, pulse, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(170, 240, 255, 0.9)";
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(marker.x, marker.y, pulse * 3.2, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(170, 240, 255, 0.28)";
-      ctx.stroke();
-    }
-  });
-  return <canvas ref={ref} className={`${layer} h-full w-full`} aria-hidden />;
-}
-
-/* ------------------------------------------------------------------ *
- * Mouse spotlight — follows cursor inside container (Desktop only)
- * ------------------------------------------------------------------ */
-export function MouseSpotlight({ size = 620 }: { size?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const isMobile = window.innerWidth < 768 || "ontouchstart" in window;
-    if (isMobile) return;
-
-    const el = ref.current;
-    const host = el?.parentElement;
-    if (!el || !host) return;
-    let raf = 0;
-    const target = { x: 0.5, y: 0.4 };
-    const pos = { x: 0.5, y: 0.4 };
-    const onMove = (e: MouseEvent) => {
-      const r = host.getBoundingClientRect();
-      target.x = (e.clientX - r.left) / r.width;
-      target.y = (e.clientY - r.top) / r.height;
-    };
-    const loop = () => {
-      pos.x += (target.x - pos.x) * 0.08;
-      pos.y += (target.y - pos.y) * 0.08;
-      el.style.transform = `translate3d(calc(${pos.x * 100}% - 50%), calc(${pos.y * 100}% - 50%), 0)`;
-      raf = requestAnimationFrame(loop);
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    raf = requestAnimationFrame(loop);
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
+export function ConnectedParticles() {
   return (
     <div className={layer} aria-hidden>
       <div
-        ref={ref}
-        className="absolute left-0 top-0 rounded-full blur-[50px]"
+        className="absolute inset-0 opacity-30"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--primary) 20%, transparent), transparent 70%)",
+        }}
+      />
+      <FloatingDots count={20} />
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Animated waves — Pure CSS gradient lines
+ * ------------------------------------------------------------------ */
+export function WaveField() {
+  return <GradientLines count={3} />;
+}
+
+/* ------------------------------------------------------------------ *
+ * Pure CSS Wire Globe / Chandigarh Marker
+ * ------------------------------------------------------------------ */
+export function WireGlobe() {
+  return (
+    <div className={layer} aria-hidden>
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full border border-primary/20 bg-primary/5 shadow-[0_0_50px_rgba(100,200,255,0.15)] flex items-center justify-center">
+        <div className="w-[240px] h-[240px] rounded-full border border-accent/20 animate-[orbit-spin_40s_linear_infinite]" />
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Mouse spotlight — Static ambient gradient spotlight (Pure CSS)
+ * ------------------------------------------------------------------ */
+export function MouseSpotlight({ size = 620 }: { size?: number }) {
+  return (
+    <div className={layer} aria-hidden>
+      <div
+        className="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[50px] opacity-60"
         style={{
           width: size,
           height: size,
@@ -536,7 +196,7 @@ export function MouseSpotlight({ size = 620 }: { size?: number }) {
 }
 
 /* ------------------------------------------------------------------ *
- * Morphing blobs / liquid shapes
+ * Morphing blobs / liquid shapes (Pure CSS)
  * ------------------------------------------------------------------ */
 export function MorphBlobs() {
   const blobs = [
@@ -565,7 +225,7 @@ export function MorphBlobs() {
 }
 
 /* ------------------------------------------------------------------ *
- * Rotating rings + orbiting chips
+ * Rotating rings + orbiting chips (Pure CSS)
  * ------------------------------------------------------------------ */
 export function OrbitRings({ labels }: { labels: string[] }) {
   const rings = [
@@ -625,7 +285,7 @@ export function OrbitRings({ labels }: { labels: string[] }) {
 }
 
 /* ------------------------------------------------------------------ *
- * Light rays + glass reflections
+ * Light rays + glass reflections (Pure CSS)
  * ------------------------------------------------------------------ */
 export function LightRays({ count = 3 }: { count?: number }) {
   return (
@@ -691,7 +351,7 @@ export function FloatingDots({ count = 25 }: { count?: number }) {
 }
 
 /* ------------------------------------------------------------------ *
- * Moving gradient lines — experience section
+ * Moving gradient lines — experience section (Pure CSS)
  * ------------------------------------------------------------------ */
 export function GradientLines({ count = 4 }: { count?: number }) {
   return (

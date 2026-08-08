@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="relative isolate overflow-hidden bg-background px-6 pt-24 pb-10 md:px-10">
       <WaveField />
-      <ParticleField density={0.00006} />
+      <ParticleField />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-64 blur-[70px]"

@@ -22,7 +22,7 @@ export function About() {
           text={workflowIntro.heading}
           className="font-display text-[clamp(1.8rem,4vw,3.2rem)] leading-[1.08] font-semibold text-foreground"
         />
-        <Reveal delay={0.15}>
+        <Reveal>
           <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted-foreground max-w-3xl">
             {workflowIntro.sub}
           </p>
@@ -30,7 +30,7 @@ export function About() {
       </div>
 
       {/* Horizontal Workflow Process Bar */}
-      <Reveal delay={0.3}>
+      <Reveal>
         <div className="mt-12">
           <h3 className="font-mono text-xs tracking-[0.25em] text-primary uppercase font-semibold mb-6 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-primary" />
@@ -42,12 +42,12 @@ export function About() {
             {workflowIntro.steps.map((step, idx) => (
               <div
                 key={step.label}
-                className="relative glass-panel rounded-xl p-4 border border-white/10 backdrop-blur-md hover:border-primary/40 transition-all duration-300 group"
+                className="relative glass-panel neon-glass-card rounded-xl p-4 border border-white/10 transition-all duration-200 group"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-mono text-xs text-primary font-bold">{step.num}</span>
                   {idx < workflowIntro.steps.length - 1 && (
-                    <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                    <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
                   )}
                 </div>
                 <h4 className="font-display text-sm font-semibold text-foreground tracking-tight">
@@ -65,7 +65,7 @@ export function About() {
             {workflowIntro.steps.map((step) => (
               <div
                 key={step.label}
-                className="glass-panel rounded-xl p-4 border border-white/10 backdrop-blur-md flex items-start gap-3.5"
+                className="glass-panel neon-glass-card rounded-xl p-4 border border-white/10 flex items-start gap-3.5"
               >
                 <span className="font-mono text-sm text-primary font-bold bg-primary/10 rounded-lg px-2.5 py-1 border border-primary/20">
                   {step.num}

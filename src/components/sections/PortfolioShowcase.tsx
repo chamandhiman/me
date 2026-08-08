@@ -1,6 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -9,59 +8,51 @@ import {
   ExternalLink,
   Sparkles,
 } from "lucide-react";
-import { FloatingShapes, LightRays, MeshGradient, Vignette } from "@/components/backgrounds";
+import { LightRays, MeshGradient, Vignette } from "@/components/backgrounds";
 import { CharReveal, Eyebrow, Reveal, Section } from "@/components/motion-kit";
-import {
-  projectFilters,
-  projects,
-} from "@/data/portfolio";
+import { projectFilters, projects } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
 
 export function PortfolioShowcase() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All Work");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Filter projects by category
-  const filteredProjects = projects.filter(
-    (item) => selectedCategory === "All Work" || item.cat === selectedCategory
-  );
+  const filteredProjects = projects.filter((p) => {
+    if (selectedCategory === "All Work") return true;
+    if (selectedCategory === "Web Apps") return p.cat === "Web App" || p.cat === "Saas App";
+    if (selectedCategory === "iPad Solutions") return p.cat === "iPad App";
+    if (selectedCategory === "Mobile Apps") return p.cat === "iOS App" || p.cat === "Mobile Portal";
+    return p.cat === selectedCategory;
+  });
 
   const total = filteredProjects.length;
 
-  const handleCategoryChange = (cat: string) => {
-    setSelectedCategory(cat);
+  useEffect(() => {
     setCurrentIndex(0);
-    setDirection(0);
-  };
+  }, [selectedCategory]);
+
+  const currentItem = filteredProjects[currentIndex] || filteredProjects[0];
 
   const nextSlide = useCallback(() => {
     if (total === 0) return;
-    setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % total);
   }, [total]);
 
   const prevSlide = useCallback(() => {
     if (total === 0) return;
-    setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + total) % total);
   }, [total]);
 
-  const currentItem = filteredProjects[currentIndex] || filteredProjects[0];
-
-  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isModalOpen) {
+      if (!isModalOpen) return;
+      if (e.key === "Escape") {
         setIsModalOpen(false);
       } else if (e.key === "ArrowRight") {
         nextSlide();
@@ -74,7 +65,6 @@ export function PortfolioShowcase() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isModalOpen, nextSlide, prevSlide]);
 
-  // Lock body scroll when modal active
   useEffect(() => {
     if (isModalOpen) {
       document.body.style.overflow = "hidden";
@@ -89,7 +79,9 @@ export function PortfolioShowcase() {
     };
   }, [isModalOpen]);
 
-  // Touch Swipe Handlers
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
   const minSwipeDistance = 40;
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -115,251 +107,206 @@ export function PortfolioShowcase() {
     }
   };
 
-  const slideVariants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? 240 : -240,
-      opacity: 0,
-      scale: 0.96,
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-    },
-    exit: (dir: number) => ({
-      zIndex: 0,
-      x: dir < 0 ? 240 : -240,
-      opacity: 0,
-      scale: 0.96,
-    }),
-  };
-
   return (
     <Section
       id="work"
       backdrop={
         <>
-          <MeshGradient />
-          <LightRays />
-          <FloatingShapes count={8} />
+          <LightRays count={2} />
+          <MeshGradient opacity={0.25} />
           <Vignette />
         </>
       }
     >
-      {/* Header */}
-      <Eyebrow>Selected Work</Eyebrow>
-      <div className="flex flex-wrap items-end justify-between gap-6 mb-8">
+      <Eyebrow>Selected Works</Eyebrow>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <CharReveal
-            text="Interfaces I've designed, built and helped bring to life."
-            className="font-display text-[clamp(1.8rem,4vw,3.2rem)] leading-[1.08] font-semibold text-foreground max-w-3xl"
+            text="Driving School Platform Ecosystem"
+            className="font-display text-[clamp(1.9rem,4vw,3.2rem)] leading-[1.05] font-semibold text-foreground"
           />
-          <p className="mt-3 text-base sm:text-lg text-muted-foreground max-w-2xl">
-            From enterprise dashboards and workshop management systems to responsive customer websites and mobile experiences.
-          </p>
+          <Reveal>
+            <p className="mt-3 max-w-2xl text-base text-muted-foreground">
+              Production web applications, centralized admin modules, staff iPad portals, and student iOS interfaces designed and integrated over 8+ years.
+            </p>
+          </Reveal>
         </div>
 
-        {/* Category Filters */}
-        <Reveal delay={0.1}>
-          <div className="glass-panel flex flex-wrap gap-1 rounded-full p-1.5 border border-white/10 backdrop-blur-md">
-            {projectFilters.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => handleCategoryChange(cat)}
-                className={cn(
-                  "relative rounded-full px-4 py-2 text-sm font-medium tracking-tight transition-colors duration-300",
-                  selectedCategory === cat
-                    ? "text-primary-foreground font-semibold"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-                aria-label={`Filter by ${cat}`}
-              >
-                {selectedCategory === cat && (
-                  <motion.span
-                    layoutId="work-filter-pill"
-                    className="absolute inset-0 rounded-full bg-primary shadow-md"
-                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{cat}</span>
-              </button>
-            ))}
+        <Reveal>
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-xs text-primary font-semibold uppercase tracking-wider bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full">
+              {total} Projects Filtered
+            </span>
           </div>
         </Reveal>
       </div>
 
-      {/* MAIN FEATURED PROJECT STAGE */}
-      <div
-        ref={stageRef}
-        className="relative mx-auto w-full max-w-6xl focus:outline-none"
-        tabIndex={0}
-        aria-label="Featured Project Showcase Stage"
-      >
-        <div
-          className="relative overflow-hidden rounded-2xl border border-white/15 bg-card/30 backdrop-blur-xl shadow-2xl p-4 sm:p-6 lg:p-8"
-          style={{
-            boxShadow:
-              "0 30px 60px -15px rgba(0, 0, 0, 0.7), 0 0 50px rgba(59, 130, 246, 0.12)",
-          }}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-        >
-          {/* Subtle Light Reflection Sweep */}
-          <div className="pointer-events-none absolute -inset-full bg-gradient-to-r from-transparent via-white/5 to-transparent rotate-12 transition-transform duration-1000" />
+      {/* FILTER TABS */}
+      <Reveal>
+        <div className="mt-8 flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
+          {projectFilters.map((tab) => {
+            const active = selectedCategory === tab;
+            return (
+              <button
+                key={tab}
+                onClick={() => setSelectedCategory(tab)}
+                className={cn(
+                  "rounded-full px-4 py-2 text-xs font-medium transition-all duration-200 cursor-pointer border",
+                  active
+                    ? "bg-primary text-primary-foreground border-primary shadow-[0_0_15px_rgba(100,210,255,0.4)]"
+                    : "glass-panel text-muted-foreground hover:text-foreground hover:border-primary/40"
+                )}
+              >
+                {tab}
+              </button>
+            );
+          })}
+        </div>
+      </Reveal>
 
-          {/* Stage Top Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 mb-4 border-b border-white/10">
-            <div className="flex items-center space-x-3">
-              <span className="flex h-2.5 w-2.5 rounded-full bg-primary animate-pulse" />
-              <span className="font-mono text-xs text-primary uppercase tracking-wider font-bold">
-                {currentItem?.cat}
-              </span>
-              <span className="text-muted-foreground text-xs">•</span>
-              <span className="text-xs text-muted-foreground font-mono">
-                {currentIndex + 1} of {total}
-              </span>
+      {/* PRIMARY FEATURED SHOWCASE STAGE */}
+      {currentItem && (
+        <Reveal>
+          <div className="mt-8 glass-panel neon-glass-card rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/10 relative">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-4 pb-4 border-b border-white/10">
+              <div>
+                <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-primary font-bold bg-primary/10 px-3 py-1 rounded-full border border-primary/20 mb-2">
+                  <Sparkles className="w-3 h-3 text-primary" />
+                  {currentItem.cat}
+                </span>
+                <h3 className="font-display text-xl sm:text-2xl font-bold text-foreground">
+                  {currentItem.title}
+                </h3>
+              </div>
+
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="inline-flex items-center gap-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1.5 text-xs font-semibold transition-all duration-200 border border-primary/25 hover:shadow-[0_0_15px_rgba(100,210,255,0.3)] cursor-pointer"
+                aria-label="Expand screenshot to full resolution modal"
+              >
+                <Maximize2 className="w-3.5 h-3.5" />
+                <span>View Fullscreen</span>
+              </button>
             </div>
 
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1.5 text-xs font-semibold transition-colors border border-primary/25"
-              aria-label="Expand screenshot to full resolution modal"
-            >
-              <Maximize2 className="w-3.5 h-3.5" />
-              <span>View Fullscreen</span>
-            </button>
-          </div>
-
-          {/* Large Screenshot Stage */}
-          <div className="relative min-h-[300px] sm:min-h-[420px] lg:min-h-[520px] w-full flex items-center justify-center overflow-hidden rounded-xl bg-black/50 group border border-white/5">
-            <AnimatePresence initial={false} custom={direction} mode="wait">
-              <motion.div
-                key={currentItem?.id || currentItem?.title}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: "spring", stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.2 },
-                  scale: { duration: 0.2 },
-                }}
+            {/* Large Screenshot Stage */}
+            <div className="relative min-h-[300px] sm:min-h-[420px] lg:min-h-[520px] w-full flex items-center justify-center overflow-hidden rounded-xl bg-black/50 group border border-white/5">
+              <div
                 onClick={() => setIsModalOpen(true)}
                 className="relative w-full h-full flex items-center justify-center cursor-pointer select-none p-2 sm:p-4"
               >
                 <img
-                  src={currentItem?.src}
-                  alt={currentItem?.title}
-                  className="max-h-[280px] sm:max-h-[400px] lg:max-h-[490px] w-auto max-w-full object-contain rounded-lg shadow-2xl transition-transform duration-500 group-hover:scale-[1.015]"
+                  src={currentItem.src}
+                  alt={currentItem.title}
+                  className="max-h-[280px] sm:max-h-[400px] lg:max-h-[490px] w-auto max-w-full object-contain rounded-lg shadow-2xl transition-transform duration-300 group-hover:scale-[1.015]"
                   loading="eager"
                   decoding="async"
                 />
-              </motion.div>
-            </AnimatePresence>
+              </div>
 
-            {/* Stage Left Arrow */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                prevSlide();
-              }}
-              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/70 hover:bg-primary text-white p-3 backdrop-blur-md border border-white/15 opacity-80 hover:opacity-100 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary shadow-xl z-20"
-              aria-label="Previous project slide"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
+              {/* Stage Left Arrow */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevSlide();
+                }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-primary text-white p-2.5 sm:p-3 border border-white/15 transition-all duration-200 hover:scale-110 z-10 focus:outline-none focus:ring-2 focus:ring-primary shadow-xl cursor-pointer"
+                aria-label="Previous screenshot"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
 
-            {/* Stage Right Arrow */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                nextSlide();
-              }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/70 hover:bg-primary text-white p-3 backdrop-blur-md border border-white/15 opacity-80 hover:opacity-100 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary shadow-xl z-20"
-              aria-label="Next project slide"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </div>
+              {/* Stage Right Arrow */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextSlide();
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/80 hover:bg-primary text-white p-2.5 sm:p-3 border border-white/15 transition-all duration-200 hover:scale-110 z-10 focus:outline-none focus:ring-2 focus:ring-primary shadow-xl cursor-pointer"
+                aria-label="Next screenshot"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
 
-          {/* Project Details Footer */}
-          <div className="mt-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-4 border-t border-white/10">
-            <div className="space-y-1 max-w-2xl">
-              <h3 className="text-lg sm:text-xl font-bold text-foreground">
-                {currentItem?.title}
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {currentItem?.desc}
-              </p>
-              {currentItem?.tags && (
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {currentItem.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-md bg-white/5 border border-white/10 px-2.5 py-0.5 font-mono text-[10px] text-primary"
-                    >
-                      {t}
-                    </span>
+            {/* Bottom Controls & Info */}
+            <div className="mt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="max-w-2xl">
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  {currentItem.desc || "Interactive screenshot from Driving School Software platform ecosystem."}
+                </p>
+                {currentItem.tags && (
+                  <div className="mt-2.5 flex flex-wrap gap-1.5">
+                    {currentItem.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="font-mono text-[10px] bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full text-foreground/80"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                {(currentItem as { href?: string }).href && (
+                  <a
+                    href={(currentItem as { href?: string }).href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                  >
+                    <span>Visit Live Platform</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                )}
+
+                <div className="flex items-center gap-1.5">
+                  {filteredProjects.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentIndex(idx)}
+                      className={cn(
+                        "h-2.5 rounded-full transition-all duration-200 focus:outline-none cursor-pointer",
+                        idx === currentIndex
+                          ? "w-8 bg-primary shadow-[0_0_10px_rgba(100,210,255,0.5)]"
+                          : "w-2.5 bg-white/20 hover:bg-white/40"
+                      )}
+                      aria-label={`Go to slide ${idx + 1}`}
+                    />
                   ))}
                 </div>
-              )}
-            </div>
-
-            {/* Stage Pagination Dots */}
-            <div className="flex items-center gap-1.5 self-center md:self-auto overflow-x-auto max-w-full py-1">
-              {filteredProjects.map((item, idx) => (
-                <button
-                  key={item.id || item.title}
-                  onClick={() => {
-                    setDirection(idx > currentIndex ? 1 : -1);
-                    setCurrentIndex(idx);
-                  }}
-                  className={cn(
-                    "h-2.5 rounded-full transition-all duration-300 focus:outline-none",
-                    idx === currentIndex
-                      ? "w-8 bg-primary shadow-sm"
-                      : "w-2.5 bg-white/20 hover:bg-white/40"
-                  )}
-                  aria-label={`Go to slide ${idx + 1}`}
-                />
-              ))}
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </Reveal>
+      )}
 
       {/* SECONDARY COMPACT THUMBNAIL GRID */}
-      <div className="mt-14 max-w-6xl mx-auto">
+      <div className="mt-12 max-w-6xl mx-auto">
         <h4 className="font-mono text-xs tracking-[0.25em] text-primary uppercase font-bold mb-6">
           Other Selected Work ({total})
         </h4>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {filteredProjects.map((proj, idx) => (
-            <motion.div
+            <div
               key={proj.id || proj.title}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: (idx % 4) * 0.05 }}
               onClick={() => {
-                setDirection(idx > currentIndex ? 1 : -1);
                 setCurrentIndex(idx);
                 setIsModalOpen(true);
               }}
               className={cn(
-                "glass-panel group relative overflow-hidden rounded-xl border border-white/10 cursor-pointer p-2.5 bg-card/20 hover:border-primary/50 transition-all duration-300",
-                idx === currentIndex && "border-primary bg-primary/5 shadow-md"
+                "glass-panel neon-glass-card group relative overflow-hidden rounded-xl border border-white/10 cursor-pointer p-2.5 bg-card/20 hover:border-primary/50 transition-all duration-200",
+                idx === currentIndex && "border-primary bg-primary/10 shadow-[0_0_15px_rgba(100,210,255,0.25)]"
               )}
             >
               <div className="relative aspect-16/10 w-full overflow-hidden rounded-lg bg-black/40 flex items-center justify-center p-2">
                 <img
                   src={proj.src}
                   alt={proj.title}
-                  className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="max-h-full max-w-full object-contain transition-transform duration-200 group-hover:scale-105"
                   loading="lazy"
                   decoding="async"
                 />
@@ -372,115 +319,108 @@ export function PortfolioShowcase() {
                   {proj.title}
                 </h5>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
 
-      {/* FULLSCREEN LIGHTBOX MODAL */}
+      {/* FULLSCREEN LIGHTBOX MODAL (Pure CSS & React State) */}
       {isMounted &&
+        isModalOpen &&
+        currentItem &&
         createPortal(
-          <AnimatePresence>
-            {isModalOpen && currentItem && (
-              <motion.div
-                key="lightbox-modal"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.15 }}
-                onClick={() => setIsModalOpen(false)}
-                className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/95 p-4 sm:p-6 select-none"
-                aria-modal="true"
-                role="dialog"
-                aria-label="Fullscreen project view"
+          <div
+            onClick={() => setIsModalOpen(false)}
+            className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/95 p-4 sm:p-6 select-none animate-in fade-in-0 transition-opacity duration-200"
+            aria-modal="true"
+            role="dialog"
+            aria-label="Fullscreen project view"
+          >
+            {/* Modal Top Control Bar */}
+            <div
+              className="absolute top-4 sm:top-6 inset-x-4 sm:inset-x-10 flex items-center justify-between z-[1000000]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center space-x-3 bg-black/90 border border-white/15 rounded-full px-4 py-2 shadow-2xl">
+                <span className="font-mono text-xs text-primary font-bold">
+                  {currentIndex + 1} / {total}
+                </span>
+                <span className="text-white/30 text-xs">|</span>
+                <span className="text-xs font-medium text-white/90 truncate max-w-[200px] sm:max-w-md">
+                  {currentItem.title}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsModalOpen(false);
+                }}
+                className="rounded-full bg-white/20 hover:bg-white/30 text-white p-3 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white border border-white/20 shadow-2xl cursor-pointer"
+                aria-label="Close modal"
               >
-                {/* Modal Top Control Bar */}
-                <div
-                  className="absolute top-4 sm:top-6 inset-x-4 sm:inset-x-10 flex items-center justify-between z-[1000000]"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="flex items-center space-x-3 bg-black/90 border border-white/15 rounded-full px-4 py-2 shadow-2xl">
-                    <span className="font-mono text-xs text-primary font-bold">
-                      {currentIndex + 1} / {total}
-                    </span>
-                    <span className="text-white/30 text-xs">|</span>
-                    <span className="text-xs font-medium text-white/90 truncate max-w-[200px] sm:max-w-md">
-                      {currentItem.title}
-                    </span>
-                  </div>
+                <X className="w-6 h-6" />
+              </button>
+            </div>
 
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsModalOpen(false);
-                    }}
-                    className="rounded-full bg-white/20 hover:bg-white/30 text-white p-3 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white border border-white/20 shadow-2xl cursor-pointer"
-                    aria-label="Close modal"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
-                </div>
+            {/* Left Nav Arrow in Modal */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                prevSlide();
+              }}
+              className="absolute left-3 sm:left-8 top-1/2 -translate-y-1/2 rounded-full bg-black/90 hover:bg-primary text-white p-3 sm:p-3.5 border border-white/15 transition-all duration-200 hover:scale-110 z-[1000000] focus:outline-none focus:ring-2 focus:ring-primary shadow-2xl cursor-pointer"
+              aria-label="Previous project image"
+            >
+              <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7" />
+            </button>
 
-                {/* Left Nav Arrow in Modal */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    prevSlide();
-                  }}
-                  className="absolute left-3 sm:left-8 top-1/2 -translate-y-1/2 rounded-full bg-black/90 hover:bg-primary text-white p-3 sm:p-3.5 border border-white/15 transition-all duration-200 hover:scale-110 z-[1000000] focus:outline-none focus:ring-2 focus:ring-primary shadow-2xl cursor-pointer"
-                  aria-label="Previous project image"
-                >
-                  <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7" />
-                </button>
+            {/* Right Nav Arrow in Modal */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                nextSlide();
+              }}
+              className="absolute right-3 sm:right-8 top-1/2 -translate-y-1/2 rounded-full bg-black/90 hover:bg-primary text-white p-3 sm:p-3.5 border border-white/15 transition-all duration-200 hover:scale-110 z-[1000000] focus:outline-none focus:ring-2 focus:ring-primary shadow-2xl cursor-pointer"
+              aria-label="Next project image"
+            >
+              <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7" />
+            </button>
 
-                {/* Right Nav Arrow in Modal */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    nextSlide();
-                  }}
-                  className="absolute right-3 sm:right-8 top-1/2 -translate-y-1/2 rounded-full bg-black/90 hover:bg-primary text-white p-3 sm:p-3.5 border border-white/15 transition-all duration-200 hover:scale-110 z-[1000000] focus:outline-none focus:ring-2 focus:ring-primary shadow-2xl cursor-pointer"
-                  aria-label="Next project image"
-                >
-                  <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7" />
-                </button>
+            {/* Modal Content Box */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-h-[85vh] max-w-[90vw] flex flex-col items-center justify-center rounded-2xl overflow-hidden mt-10 sm:mt-12"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+            >
+              <img
+                src={currentItem.src}
+                alt={currentItem.title}
+                loading="eager"
+                decoding="async"
+                className="max-h-[70vh] sm:max-h-[75vh] max-w-[88vw] w-auto h-auto object-contain rounded-xl shadow-2xl border border-white/10"
+              />
 
-                {/* Modal Content Box */}
-                <div
-                  onClick={(e) => e.stopPropagation()}
-                  className="relative max-h-[85vh] max-w-[90vw] flex flex-col items-center justify-center rounded-2xl overflow-hidden mt-10 sm:mt-12"
-                  onTouchStart={onTouchStart}
-                  onTouchMove={onTouchMove}
-                  onTouchEnd={onTouchEnd}
-                >
-                  <img
-                    src={currentItem.src}
-                    alt={currentItem.title}
-                    loading="eager"
-                    decoding="async"
-                    className="max-h-[70vh] sm:max-h-[75vh] max-w-[88vw] w-auto h-auto object-contain rounded-xl shadow-2xl border border-white/10"
-                  />
-
-                  <div className="mt-3 text-center max-w-xl px-4">
-                    <span className="inline-block rounded-full bg-primary/20 text-primary border border-primary/30 text-[10px] uppercase font-mono px-3 py-1 font-semibold mb-1">
-                      {currentItem.cat}
-                    </span>
-                    <p className="text-xs sm:text-sm text-white/90 font-medium">
-                      {currentItem.title}
-                    </p>
-                    {currentItem.desc && (
-                      <p className="text-[11px] sm:text-xs text-white/70 mt-0.5">
-                        {currentItem.desc}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>,
+              <div className="mt-3 text-center max-w-xl px-4">
+                <span className="inline-block rounded-full bg-primary/20 text-primary border border-primary/30 text-[10px] uppercase font-mono px-3 py-1 font-semibold mb-1">
+                  {currentItem.cat}
+                </span>
+                <p className="text-xs sm:text-sm text-white/90 font-medium">
+                  {currentItem.title}
+                </p>
+                {currentItem.desc && (
+                  <p className="text-[11px] sm:text-xs text-white/70 mt-0.5">
+                    {currentItem.desc}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>,
           document.body
         )}
     </Section>

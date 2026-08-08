@@ -1,4 +1,4 @@
-import { Aurora, GridFloor, MouseSpotlight, WireGlobe, Vignette } from "@/components/backgrounds";
+import { Aurora, WireGlobe, Vignette } from "@/components/backgrounds";
 import { Eyebrow, MagneticButton, Reveal, Section } from "@/components/motion-kit";
 import { person, socials } from "@/data/portfolio";
 import { Mail, MapPin } from "lucide-react";
@@ -23,13 +23,13 @@ export function Contact() {
             Let&rsquo;s build something worth remembering
           </h2>
         </Reveal>
-        <Reveal delay={0.15}>
+        <Reveal>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
             Based in {person.location}. Open for UI/UX design, responsive web projects, and product modernization collaborations.
           </p>
         </Reveal>
 
-        <Reveal delay={0.28}>
+        <Reveal>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <MagneticButton href={`mailto:${person.email}`}>
               {person.email}
@@ -41,9 +41,9 @@ export function Contact() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.4}>
+        <Reveal>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 max-w-xl mx-auto">
-            <div className="glass-panel rounded-2xl p-5 border border-white/10 flex items-center justify-center gap-3">
+            <div className="glass-panel neon-glass-card rounded-2xl p-5 border border-white/10 flex items-center justify-center gap-3">
               <MapPin className="w-5 h-5 text-primary" />
               <div className="text-left">
                 <dt className="font-mono text-[10px] tracking-[0.25em] text-primary uppercase font-bold">
@@ -53,7 +53,7 @@ export function Contact() {
               </div>
             </div>
 
-            <div className="glass-panel rounded-2xl p-5 border border-white/10 flex items-center justify-center gap-3">
+            <div className="glass-panel neon-glass-card rounded-2xl p-5 border border-white/10 flex items-center justify-center gap-3">
               <Mail className="w-5 h-5 text-primary" />
               <div className="text-left">
                 <dt className="font-mono text-[10px] tracking-[0.25em] text-primary uppercase font-bold">
@@ -65,7 +65,7 @@ export function Contact() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.5}>
+        <Reveal>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             {socials.filter(s => !s.placeholder).map((s) => (
               <a
@@ -73,7 +73,7 @@ export function Contact() {
                 href={s.href}
                 target={s.href.startsWith("http") ? "_blank" : undefined}
                 rel="noreferrer noopener"
-                className="glass-panel rounded-full px-5 py-2 text-xs font-medium tracking-tight text-muted-foreground transition-colors duration-300 hover:text-primary border border-white/10"
+                className="glass-panel neon-glass-card rounded-full px-5 py-2 text-xs font-medium tracking-tight text-muted-foreground transition-all duration-200 hover:text-primary border border-white/10"
               >
                 {s.label}
               </a>

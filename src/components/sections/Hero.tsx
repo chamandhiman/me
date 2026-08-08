@@ -1,25 +1,10 @@
-import { motion, useScroll, useTransform } from "framer-motion";
 import { CharReveal, MagneticButton, Marquee, Reveal } from "@/components/motion-kit";
 import { person, heroMarquee, heroStats } from "@/data/portfolio";
-import { useRef, useEffect, useState } from "react";
 import chamanImg from "@/assests/chaman.png";
 
 export function Hero() {
-  const ref = useRef<HTMLElement>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    setIsDesktop(window.innerWidth >= 768);
-  }, []);
-
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
-
   return (
     <section
-      ref={ref}
       id="hero"
       className="relative isolate flex min-h-[92svh] items-center overflow-hidden bg-background px-6 pt-28 pb-16 md:px-10"
     >
@@ -37,10 +22,7 @@ export function Hero() {
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background via-background/60 to-transparent" />
       </div>
 
-      <motion.div
-        style={isDesktop ? { y, opacity, scale } : {}}
-        className="relative z-10 mx-auto w-full max-w-6xl"
-      >
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
         <div className="max-w-3xl">
           <Reveal>
             <span className="glass-panel inline-flex items-center gap-2.5 rounded-full px-4 py-1.5 font-mono text-xs tracking-[0.25em] text-muted-foreground uppercase border border-white/10">
@@ -54,24 +36,23 @@ export function Hero() {
 
           <CharReveal
             as="h1"
-            delay={0.1}
             text={`Hi, I'm ${person.name}`}
             className="mt-6 font-display text-[clamp(2.5rem,6.5vw,5.5rem)] leading-[0.95] font-semibold text-foreground [text-shadow:0_0_50px_color-mix(in_oklab,var(--primary)_30%,transparent)]"
           />
 
-          <Reveal delay={0.25}>
+          <Reveal>
             <p className="mt-4 font-display text-[clamp(1.1rem,2vw,1.65rem)] font-medium text-primary tracking-tight">
               {person.role}
             </p>
           </Reveal>
 
-          <Reveal delay={0.35}>
+          <Reveal>
             <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground">
               {person.tagline}
             </p>
           </Reveal>
 
-          <Reveal delay={0.5}>
+          <Reveal>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <MagneticButton href="#work">
                 View Selected Work
@@ -83,12 +64,12 @@ export function Hero() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.65}>
+          <Reveal>
             <dl className="mt-10 grid grid-cols-2 gap-3.5 sm:grid-cols-4 max-w-2xl">
               {heroStats.map((s) => (
                 <div
                   key={s.label}
-                  className="glass-panel rounded-2xl p-3.5 border border-white/10 backdrop-blur-md hover:border-primary/30 transition-colors"
+                  className="glass-panel neon-glass-card rounded-2xl p-3.5 border border-white/10"
                 >
                   <dt className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-tight">
                     {s.value}
@@ -101,9 +82,9 @@ export function Hero() {
             </dl>
           </Reveal>
         </div>
-      </motion.div>
+      </div>
 
-      <div className="absolute inset-x-0 bottom-0 z-10 border-t border-border/50 py-3 bg-black/20 backdrop-blur-sm">
+      <div className="absolute inset-x-0 bottom-0 z-10 border-t border-border/50 py-3 bg-black/20">
         <Marquee items={heroMarquee} duration={38} />
       </div>
     </section>

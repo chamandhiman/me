@@ -1,15 +1,5 @@
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useScroll,
-  useTransform,
-  type MotionStyle,
-} from "framer-motion";
-import { useRef, useEffect, useState, type ReactNode, type CSSProperties } from "react";
+import { type ReactNode, type CSSProperties } from "react";
 import { cn } from "@/lib/utils";
-
-const EASE = [0.16, 1, 0.3, 1] as const;
 
 /* Section shell: full-bleed backdrop slot + content container */
 export function Section({
@@ -39,24 +29,17 @@ export function Section({
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <motion.p
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, ease: EASE }}
-      className="mb-5 flex items-center gap-3 font-mono text-[11px] tracking-[0.32em] text-primary uppercase"
-    >
+    <p className="mb-5 flex items-center gap-3 font-mono text-[11px] tracking-[0.32em] text-primary uppercase">
       <span className="inline-block h-px w-8 bg-primary/60" />
       {children}
-    </motion.p>
+    </p>
   );
 }
 
-/* Word-by-word reveal optimized for zero GPU blur overhead */
+/* Word-by-word reveal (Pure HTML/CSS) */
 export function CharReveal({
   text,
   className,
-  delay = 0,
   as: Tag = "h2",
   gradient = false,
 }: {
@@ -72,31 +55,21 @@ export function CharReveal({
       <span className="sr-only">{text}</span>
       <span aria-hidden className="inline-block">
         {words.map((word, wi) => (
-          <motion.span
+          <span
             key={wi}
-            initial={{ opacity: 0, y: "0.4em" }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{
-              duration: 0.65,
-              ease: EASE,
-              delay: delay + wi * 0.04,
-            }}
             className={cn("inline-block whitespace-nowrap mr-[0.25em]", gradient && "text-gradient-char")}
           >
             {word}
-          </motion.span>
+          </span>
         ))}
       </span>
     </Tag>
   );
 }
 
-/* Lightweight reveal */
+/* Lightweight container (Pure HTML/CSS) */
 export function Reveal({
   children,
-  delay = 0,
-  y = 20,
   className,
   style,
 }: {
@@ -104,23 +77,16 @@ export function Reveal({
   delay?: number;
   y?: number;
   className?: string;
-  style?: MotionStyle;
+  style?: CSSProperties;
 }) {
   return (
-    <motion.div
-      className={className}
-      {...(style ? { style } : {})}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.65, ease: EASE, delay }}
-    >
+    <div className={className} style={style}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
-/* Magnetic button — pulls toward cursor on desktop, plain button on touch */
+/* Magnetic button — Pure CSS Hover Button */
 export function MagneticButton({
   children,
   href,
@@ -134,65 +100,32 @@ export function MagneticButton({
   variant?: "solid" | "ghost";
   className?: string;
 }) {
-  const ref = useRef<HTMLElement>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
-  const x = useSpring(useMotionValue(0), { stiffness: 200, damping: 20 });
-  const y = useSpring(useMotionValue(0), { stiffness: 200, damping: 20 });
-
-  useEffect(() => {
-    setIsDesktop(window.innerWidth >= 768 && !("ontouchstart" in window));
-  }, []);
-
-  const handleMove = (e: React.MouseEvent) => {
-    if (!isDesktop) return;
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    x.set(((e.clientX - (r.left + r.width / 2)) / r.width) * 20);
-    y.set(((e.clientY - (r.top + r.height / 2)) / r.height) * 16);
-  };
-
-  const reset = () => {
-    if (!isDesktop) return;
-    x.set(0);
-    y.set(0);
-  };
-
   const base =
-    "animated-border group relative inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-medium tracking-tight transition-colors duration-300";
+    "group relative inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-medium tracking-tight transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer";
   const look =
     variant === "solid"
-      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-      : "glass-panel text-foreground hover:text-primary";
+      ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(100,210,255,0.35)]"
+      : "glass-panel text-foreground hover:text-primary hover:border-primary/50 hover:shadow-[0_0_25px_rgba(100,210,255,0.25)]";
 
-  const MotionTag = (href ? motion.a : motion.button) as typeof motion.a;
+  if (href) {
+    return (
+      <a href={href} onClick={onClick} className={cn(base, look, className)}>
+        {children}
+      </a>
+    );
+  }
 
   return (
-    <MotionTag
-      ref={ref as never}
-      href={href}
-      onClick={onClick}
-      onMouseMove={handleMove}
-      onMouseLeave={reset}
-      style={isDesktop ? { x, y } : {}}
-      whileTap={{ scale: 0.96 }}
-      className={cn(base, look, className)}
-    >
+    <button type="button" onClick={onClick} className={cn(base, look, className)}>
       {children}
-      <span
-        className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{ boxShadow: "var(--shadow-glow)" }}
-        aria-hidden
-      />
-    </MotionTag>
+    </button>
   );
 }
 
-/* 3D tilt card — enabled on desktop, lightweight glass card on mobile */
+/* 3D tilt card — Pure CSS Neon Glass Card */
 export function TiltCard({
   children,
   className,
-  intensity = 8,
   style,
 }: {
   children: ReactNode;
@@ -200,78 +133,26 @@ export function TiltCard({
   intensity?: number;
   style?: CSSProperties;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
-  const rx = useSpring(useMotionValue(0), { stiffness: 180, damping: 18 });
-  const ry = useSpring(useMotionValue(0), { stiffness: 180, damping: 18 });
-
-  useEffect(() => {
-    setIsDesktop(window.innerWidth >= 768 && !("ontouchstart" in window));
-  }, []);
-
-  const onMove = (e: React.MouseEvent) => {
-    if (!isDesktop) return;
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width;
-    const py = (e.clientY - r.top) / r.height;
-    ry.set((px - 0.5) * intensity * 1.5);
-    rx.set(-(py - 0.5) * intensity * 1.5);
-  };
-
-  const reset = () => {
-    if (!isDesktop) return;
-    rx.set(0);
-    ry.set(0);
-  };
-
   return (
-    <motion.div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={reset}
-      style={
-        isDesktop
-          ? ({ rotateX: rx, rotateY: ry, transformPerspective: 900, ...style } as MotionStyle)
-          : (style as MotionStyle)
-      }
-      className={cn("relative [transform-style:preserve-3d]", className)}
+    <div
+      style={style}
+      className={cn("neon-glass-card relative overflow-hidden rounded-3xl", className)}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
-/* Parallax wrapper — disabled on mobile for lag-free touch scrolling */
+/* Parallax wrapper — Pure CSS layout container */
 export function Parallax({
   children,
-  distance = 50,
   className,
 }: {
   children: ReactNode;
   distance?: number;
   className?: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    setIsDesktop(window.innerWidth >= 768);
-  }, []);
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [distance, -distance]);
-
-  return (
-    <motion.div ref={ref} style={isDesktop ? { y } : {}} className={className}>
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
 export function Marquee({
