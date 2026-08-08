@@ -191,7 +191,7 @@ export function Projects() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={closeModal}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 sm:p-6 select-none"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 sm:p-6 select-none"
             aria-modal="true"
             role="dialog"
             aria-label="Fullscreen project view"
