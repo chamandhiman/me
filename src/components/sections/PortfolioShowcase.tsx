@@ -254,14 +254,6 @@ export function PortfolioShowcase() {
                   loading="eager"
                   decoding="async"
                 />
-
-                {/* Hover Click to Expand Overlay */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg backdrop-blur-[2px]">
-                  <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-black/85 border border-white/20 text-white text-sm font-medium shadow-2xl backdrop-blur-md transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <Maximize2 className="w-4 h-4 text-primary" />
-                    <span>Click to View Fullscreen</span>
-                  </div>
-                </div>
               </motion.div>
             </AnimatePresence>
 
@@ -368,9 +360,6 @@ export function PortfolioShowcase() {
                   loading="lazy"
                   decoding="async"
                 />
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                  <Maximize2 className="w-4 h-4 text-primary" />
-                </div>
               </div>
               <div className="mt-2.5 px-1">
                 <span className="font-mono text-[9px] uppercase tracking-wider text-primary font-semibold block">
