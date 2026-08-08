@@ -10,10 +10,8 @@ export function Contact() {
       className="py-20 md:py-28"
       backdrop={
         <>
-          <Aurora intensity={0.8} />
+          <Aurora intensity={0.6} />
           <WireGlobe />
-          <GridFloor />
-          <MouseSpotlight size={520} />
           <Vignette />
         </>
       }

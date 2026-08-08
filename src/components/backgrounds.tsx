@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 
 /* ------------------------------------------------------------------ *
  * Shared canvas hook — rAF loop with DPR handling + auto teardown.
+ * Pauses automatically when outside viewport or tab hidden.
  * ------------------------------------------------------------------ */
 type DrawFn = (ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => void;
 
@@ -21,9 +22,14 @@ function useCanvas(draw: DrawFn, init?: (w: number, h: number) => void) {
     let raf = 0;
     let w = 0;
     let h = 0;
+    let isVisible = false;
+    let isTabVisible = document.visibilityState === "visible";
+    let prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const isMobile = window.innerWidth < 768;
+      const maxDpr = isMobile ? 1 : 1.5;
+      const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
       const rect = canvas.getBoundingClientRect();
       w = Math.max(rect.width, 1);
       h = Math.max(rect.height, 1);
@@ -38,16 +44,81 @@ function useCanvas(draw: DrawFn, init?: (w: number, h: number) => void) {
     ro.observe(canvas);
 
     const start = performance.now();
+
     const loop = (now: number) => {
+      if (!isVisible || !isTabVisible) {
+        raf = 0;
+        return;
+      }
       ctx.clearRect(0, 0, w, h);
       drawRef.current(ctx, w, h, (now - start) / 1000);
+
+      if (prefersReducedMotion) {
+        raf = 0;
+        return;
+      }
+
       raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
+
+    const startLoop = () => {
+      if (!raf && isVisible && isTabVisible && !prefersReducedMotion) {
+        raf = requestAnimationFrame(loop);
+      }
+    };
+
+    const stopLoop = () => {
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
+
+    // IntersectionObserver for Viewport Visibility (Pause off-screen)
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        isVisible = entry?.isIntersecting ?? false;
+        if (isVisible) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(canvas);
+
+    // Tab visibility change listener
+    const onVisibilityChange = () => {
+      isTabVisible = document.visibilityState === "visible";
+      if (isTabVisible && isVisible) {
+        startLoop();
+      } else {
+        stopLoop();
+      }
+    };
+
+    // Prefers reduced motion change listener
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onMotionChange = (e: MediaQueryListEvent) => {
+      prefersReducedMotion = e.matches;
+      if (prefersReducedMotion) {
+        stopLoop();
+      } else if (isVisible && isTabVisible) {
+        startLoop();
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    motionQuery.addEventListener("change", onMotionChange);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stopLoop();
       ro.disconnect();
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      motionQuery.removeEventListener("change", onMotionChange);
     };
   }, []);
 
@@ -63,14 +134,14 @@ export function Aurora({ intensity = 1 }: { intensity?: number }) {
   return (
     <div className={layer} aria-hidden style={{ opacity: intensity }}>
       <div
-        className="absolute -inset-[30%] blur-[90px]"
+        className="absolute -inset-[30%] blur-[80px]"
         style={{
           background: "var(--gradient-aurora)",
           animation: "aurora-drift 26s var(--ease-lux) infinite",
         }}
       />
       <div
-        className="absolute -inset-[20%] blur-[110px] opacity-70"
+        className="absolute -inset-[20%] blur-[90px] opacity-70"
         style={{
           background: "var(--gradient-aurora)",
           animation: "aurora-drift 38s var(--ease-lux) infinite reverse",
@@ -83,12 +154,13 @@ export function Aurora({ intensity = 1 }: { intensity?: number }) {
 /* ------------------------------------------------------------------ *
  * Mesh gradient — slow-moving conic mesh
  * ------------------------------------------------------------------ */
-export function MeshGradient() {
+export function MeshGradient({ opacity = 0.45 }: { opacity?: number }) {
   return (
     <div className={layer} aria-hidden>
       <div
-        className="absolute -inset-1/4 opacity-45 blur-[70px]"
+        className="absolute -inset-1/4 blur-[60px]"
         style={{
+          opacity,
           background:
             "conic-gradient(from 0deg at 30% 40%, color-mix(in oklab, var(--aurora-1) 60%, transparent), transparent 40%), conic-gradient(from 180deg at 72% 62%, color-mix(in oklab, var(--aurora-2) 55%, transparent), transparent 42%)",
           animation: "orbit-spin 55s linear infinite",
@@ -130,7 +202,7 @@ export function AnimatedGrid({
 }
 
 /* ------------------------------------------------------------------ *
- * Grid floor — 3D perspective floor for the contact section
+ * Grid floor — 3D perspective floor for contact section
  * ------------------------------------------------------------------ */
 export function GridFloor() {
   return (
@@ -156,11 +228,11 @@ export function GridFloor() {
 /* ------------------------------------------------------------------ *
  * Glow orbs — soft floating light sources
  * ------------------------------------------------------------------ */
-export function GlowOrbs({ count = 4 }: { count?: number }) {
+export function GlowOrbs({ count = 3 }: { count?: number }) {
   const orbs = Array.from({ length: count }, (_, i) => ({
     left: `${(i * 29 + 12) % 88}%`,
     top: `${(i * 41 + 18) % 76}%`,
-    size: 220 + ((i * 97) % 260),
+    size: 200 + ((i * 97) % 220),
     delay: i * 1.7,
     hue: i % 3,
   }));
@@ -169,7 +241,7 @@ export function GlowOrbs({ count = 4 }: { count?: number }) {
       {orbs.map((o, i) => (
         <div
           key={i}
-          className="absolute rounded-full blur-[80px]"
+          className="absolute rounded-full blur-[65px]"
           style={{
             left: o.left,
             top: o.top,
@@ -185,15 +257,18 @@ export function GlowOrbs({ count = 4 }: { count?: number }) {
 }
 
 /* ------------------------------------------------------------------ *
- * Floating particles (canvas)
+ * Floating particles (canvas) — adaptive mobile density & paused offscreen
  * ------------------------------------------------------------------ */
 type P = { x: number; y: number; vx: number; vy: number; r: number; a: number };
 
-export function ParticleField({ density = 0.00009 }: { density?: number }) {
+export function ParticleField({ density = 0.00006 }: { density?: number }) {
   const particles = useRef<P[]>([]);
   const ref = useCanvas(
     (ctx, w, h) => {
-      for (const p of particles.current) {
+      const list = particles.current;
+      for (let i = 0; i < list.length; i++) {
+        const p = list[i];
+        if (!p) continue;
         p.x += p.vx;
         p.y += p.vy;
         if (p.x < -10) p.x = w + 10;
@@ -207,14 +282,16 @@ export function ParticleField({ density = 0.00009 }: { density?: number }) {
       }
     },
     (w, h) => {
-      const n = Math.min(180, Math.max(40, Math.round(w * h * density)));
+      const isMobile = w < 768;
+      const maxCount = isMobile ? 30 : 70;
+      const n = Math.min(maxCount, Math.max(18, Math.round(w * h * density)));
       particles.current = Array.from({ length: n }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.22,
-        vy: -0.06 - Math.random() * 0.28,
-        r: Math.random() * 1.6 + 0.3,
-        a: Math.random() * 0.5 + 0.12,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: -0.05 - Math.random() * 0.25,
+        r: Math.random() * 1.5 + 0.3,
+        a: Math.random() * 0.4 + 0.1,
       }));
     },
   );
@@ -222,29 +299,38 @@ export function ParticleField({ density = 0.00009 }: { density?: number }) {
 }
 
 /* ------------------------------------------------------------------ *
- * Connected particles / constellation (canvas)
+ * Connected particles / constellation (canvas) — O(n) distance optimization
  * ------------------------------------------------------------------ */
-export function ConnectedParticles({ nodes = 58 }: { nodes?: number }) {
+export function ConnectedParticles({ nodes }: { nodes?: number }) {
   const pts = useRef<P[]>([]);
   const ref = useCanvas(
     (ctx, w, h) => {
       const list = pts.current;
-      for (const p of list) {
+      for (let i = 0; i < list.length; i++) {
+        const p = list[i];
+        if (!p) continue;
         p.x += p.vx;
         p.y += p.vy;
         if (p.x < 0 || p.x > w) p.vx *= -1;
         if (p.y < 0 || p.y > h) p.vy *= -1;
       }
+
+      const thresholdSq = 130 * 130;
       for (let i = 0; i < list.length; i++) {
-        const a = list[i]!;
+        const a = list[i];
+        if (!a) continue;
         for (let j = i + 1; j < list.length; j++) {
-          const b = list[j]!;
-          const d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d < 130) {
+          const b = list[j];
+          if (!b) continue;
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < thresholdSq) {
+            const dist = Math.sqrt(distSq);
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(140, 210, 255, ${(1 - d / 130) * 0.16})`;
+            ctx.strokeStyle = `rgba(140, 210, 255, ${(1 - dist / 130) * 0.14})`;
             ctx.lineWidth = 0.7;
             ctx.stroke();
           }
@@ -256,13 +342,15 @@ export function ConnectedParticles({ nodes = 58 }: { nodes?: number }) {
       }
     },
     (w, h) => {
-      pts.current = Array.from({ length: nodes }, () => ({
+      const isMobile = w < 768;
+      const count = nodes ?? (isMobile ? 18 : 32);
+      pts.current = Array.from({ length: count }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        r: Math.random() * 1.5 + 0.6,
-        a: Math.random() * 0.4 + 0.25,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 1.4 + 0.6,
+        a: Math.random() * 0.35 + 0.2,
       }));
     },
   );
@@ -274,11 +362,13 @@ export function ConnectedParticles({ nodes = 58 }: { nodes?: number }) {
  * ------------------------------------------------------------------ */
 export function WaveField() {
   const ref = useCanvas((ctx, w, h, t) => {
-    const bands = 5;
+    const isMobile = w < 768;
+    const bands = isMobile ? 3 : 5;
     for (let b = 0; b < bands; b++) {
       ctx.beginPath();
       const baseY = h * (0.45 + b * 0.1);
-      for (let x = 0; x <= w; x += 8) {
+      const step = isMobile ? 12 : 8;
+      for (let x = 0; x <= w; x += step) {
         const y =
           baseY +
           Math.sin(x * 0.006 + t * (0.5 + b * 0.16) + b) * (14 + b * 6) +
@@ -299,18 +389,23 @@ export function WaveField() {
  * ------------------------------------------------------------------ */
 export function WireGlobe() {
   const mouse = useRef({ x: 0, y: 0 });
+
   useEffect(() => {
+    const isMobile = window.innerWidth < 768 || "ontouchstart" in window;
+    if (isMobile) return;
+
     const onMove = (e: MouseEvent) => {
       mouse.current = {
         x: (e.clientX / window.innerWidth - 0.5) * 2,
         y: (e.clientY / window.innerHeight - 0.5) * 2,
       };
     };
-    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
   const ref = useCanvas((ctx, w, h, t) => {
+    const isMobile = w < 768;
     const cx = w / 2;
     const cy = h / 2;
     const R = Math.min(w, h) * 0.34;
@@ -327,10 +422,13 @@ export function WireGlobe() {
     };
 
     ctx.lineWidth = 0.8;
-    for (let i = 1; i < 10; i++) {
-      const lat = -Math.PI / 2 + (i * Math.PI) / 10;
+    const latSteps = isMobile ? 6 : 10;
+    const lonSteps = isMobile ? 12 : 18;
+
+    for (let i = 1; i < latSteps; i++) {
+      const lat = -Math.PI / 2 + (i * Math.PI) / latSteps;
       ctx.beginPath();
-      for (let lon = 0; lon <= Math.PI * 2 + 0.1; lon += 0.12) {
+      for (let lon = 0; lon <= Math.PI * 2 + 0.1; lon += 0.18) {
         const p = project(lat, lon);
         const alpha = p.z > 0 ? 0.3 : 0.09;
         ctx.strokeStyle = `rgba(150, 215, 255, ${alpha})`;
@@ -343,10 +441,10 @@ export function WireGlobe() {
         }
       }
     }
-    for (let j = 0; j < 18; j++) {
-      const lon = (j * Math.PI * 2) / 18;
+    for (let j = 0; j < lonSteps; j++) {
+      const lon = (j * Math.PI * 2) / lonSteps;
       ctx.beginPath();
-      for (let lat = -Math.PI / 2; lat <= Math.PI / 2 + 0.05; lat += 0.12) {
+      for (let lat = -Math.PI / 2; lat <= Math.PI / 2 + 0.05; lat += 0.18) {
         const p = project(lat, lon);
         ctx.strokeStyle = `rgba(190, 160, 255, ${p.z > 0 ? 0.22 : 0.07})`;
         if (lat === -Math.PI / 2) ctx.moveTo(p.x, p.y);
@@ -376,11 +474,14 @@ export function WireGlobe() {
 }
 
 /* ------------------------------------------------------------------ *
- * Mouse spotlight — follows cursor inside its container
+ * Mouse spotlight — follows cursor inside container (Desktop only)
  * ------------------------------------------------------------------ */
 export function MouseSpotlight({ size = 620 }: { size?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    const isMobile = window.innerWidth < 768 || "ontouchstart" in window;
+    if (isMobile) return;
+
     const el = ref.current;
     const host = el?.parentElement;
     if (!el || !host) return;
@@ -398,7 +499,7 @@ export function MouseSpotlight({ size = 620 }: { size?: number }) {
       el.style.transform = `translate3d(calc(${pos.x * 100}% - 50%), calc(${pos.y * 100}% - 50%), 0)`;
       raf = requestAnimationFrame(loop);
     };
-    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousemove", onMove, { passive: true });
     raf = requestAnimationFrame(loop);
     return () => {
       window.removeEventListener("mousemove", onMove);
@@ -409,7 +510,7 @@ export function MouseSpotlight({ size = 620 }: { size?: number }) {
     <div className={layer} aria-hidden>
       <div
         ref={ref}
-        className="absolute left-0 top-0 rounded-full blur-[60px]"
+        className="absolute left-0 top-0 rounded-full blur-[50px]"
         style={{
           width: size,
           height: size,
@@ -426,16 +527,16 @@ export function MouseSpotlight({ size = 620 }: { size?: number }) {
  * ------------------------------------------------------------------ */
 export function MorphBlobs() {
   const blobs = [
-    { left: "-8%", top: "6%", size: 420, hue: 1, dur: 22 },
-    { left: "62%", top: "-6%", size: 360, hue: 2, dur: 28 },
-    { left: "38%", top: "58%", size: 480, hue: 3, dur: 34 },
+    { left: "-8%", top: "6%", size: 360, hue: 1, dur: 22 },
+    { left: "62%", top: "-6%", size: 300, hue: 2, dur: 28 },
+    { left: "38%", top: "58%", size: 400, hue: 3, dur: 34 },
   ];
   return (
     <div className={layer} aria-hidden>
       {blobs.map((b, i) => (
         <div
           key={i}
-          className="absolute blur-[70px] opacity-55"
+          className="absolute blur-[60px] opacity-55"
           style={{
             left: b.left,
             top: b.top,
@@ -498,7 +599,7 @@ export function OrbitRings({ labels }: { labels: string[] }) {
           </div>
         ))}
         <div
-          className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[50px]"
+          className="absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[40px]"
           style={{
             background:
               "radial-gradient(circle, color-mix(in oklab, var(--primary) 45%, transparent), transparent 70%)",
@@ -513,15 +614,15 @@ export function OrbitRings({ labels }: { labels: string[] }) {
 /* ------------------------------------------------------------------ *
  * Light rays + glass reflections
  * ------------------------------------------------------------------ */
-export function LightRays({ count = 4 }: { count?: number }) {
+export function LightRays({ count = 3 }: { count?: number }) {
   return (
     <div className={layer} aria-hidden>
       {Array.from({ length: count }, (_, i) => (
         <div
           key={i}
-          className="absolute -top-1/3 h-[170%] w-[14%] blur-2xl"
+          className="absolute -top-1/3 h-[170%] w-[14%] blur-xl"
           style={{
-            left: `${i * 26 - 10}%`,
+            left: `${i * 32 - 5}%`,
             ["--tilt" as string]: `${12 + i * 4}deg`,
             background:
               "linear-gradient(to bottom, transparent, color-mix(in oklab, var(--primary) 18%, transparent), transparent)",
@@ -533,18 +634,18 @@ export function LightRays({ count = 4 }: { count?: number }) {
   );
 }
 
-export function FloatingShapes({ count = 7 }: { count?: number }) {
+export function FloatingShapes({ count = 5 }: { count?: number }) {
   return (
     <div className={layer} aria-hidden>
       {Array.from({ length: count }, (_, i) => (
         <div
           key={i}
-          className="glass-panel absolute opacity-40"
+          className="glass-panel absolute opacity-30"
           style={{
             left: `${(i * 37 + 6) % 92}%`,
             top: `${(i * 53 + 9) % 84}%`,
-            width: 40 + ((i * 31) % 90),
-            height: 40 + ((i * 23) % 90),
+            width: 36 + ((i * 31) % 80),
+            height: 36 + ((i * 23) % 80),
             borderRadius: i % 3 === 0 ? "50%" : i % 3 === 1 ? "22%" : "6px",
             animation: `float-y ${9 + (i % 5) * 2.4}s ease-in-out ${i * 1.3}s infinite`,
             transform: `rotate(${i * 24}deg)`,
@@ -555,7 +656,7 @@ export function FloatingShapes({ count = 7 }: { count?: number }) {
   );
 }
 
-export function FloatingDots({ count = 40 }: { count?: number }) {
+export function FloatingDots({ count = 25 }: { count?: number }) {
   return (
     <div className={layer} aria-hidden>
       {Array.from({ length: count }, (_, i) => (
@@ -579,14 +680,14 @@ export function FloatingDots({ count = 40 }: { count?: number }) {
 /* ------------------------------------------------------------------ *
  * Moving gradient lines — experience section
  * ------------------------------------------------------------------ */
-export function GradientLines({ count = 5 }: { count?: number }) {
+export function GradientLines({ count = 4 }: { count?: number }) {
   return (
     <div className={layer} aria-hidden>
       {Array.from({ length: count }, (_, i) => (
         <div
           key={i}
           className="absolute left-0 w-full overflow-hidden"
-          style={{ top: `${12 + i * 19}%`, height: 1 }}
+          style={{ top: `${15 + i * 22}%`, height: 1 }}
         >
           <div
             className="hairline absolute inset-0"
@@ -598,7 +699,7 @@ export function GradientLines({ count = 5 }: { count?: number }) {
   );
 }
 
-/* Vignette to keep every backdrop cinematic rather than flat. */
+/* Vignette to keep backdrop cinematic */
 export function Vignette() {
   return (
     <div className={layer} aria-hidden>

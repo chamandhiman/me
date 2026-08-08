@@ -1,11 +1,17 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { CharReveal, MagneticButton, Marquee, Reveal } from "@/components/motion-kit";
 import { person, heroMarquee, heroStats } from "@/data/portfolio";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import chamanImg from "@/assests/chaman.png";
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 768);
+  }, []);
+
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
@@ -32,7 +38,7 @@ export function Hero() {
       </div>
 
       <motion.div
-        style={{ y, opacity, scale }}
+        style={isDesktop ? { y, opacity, scale } : {}}
         className="relative z-10 mx-auto w-full max-w-6xl"
       >
         <div className="max-w-3xl">

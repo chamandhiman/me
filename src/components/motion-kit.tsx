@@ -1,13 +1,12 @@
 import {
   motion,
-  useInView,
   useMotionValue,
   useSpring,
   useScroll,
   useTransform,
   type MotionStyle,
 } from "framer-motion";
-import { useRef, type ReactNode, type CSSProperties } from "react";
+import { useRef, useEffect, useState, type ReactNode, type CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -28,7 +27,7 @@ export function Section({
     <section
       id={id}
       className={cn(
-        "relative isolate overflow-hidden bg-background px-6 py-28 md:px-10 md:py-36",
+        "relative isolate overflow-hidden bg-background px-6 py-24 md:px-10 md:py-32",
         className,
       )}
     >
@@ -43,8 +42,8 @@ export function Eyebrow({ children }: { children: ReactNode }) {
     <motion.p
       initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.7, ease: EASE }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, ease: EASE }}
       className="mb-5 flex items-center gap-3 font-mono text-[11px] tracking-[0.32em] text-primary uppercase"
     >
       <span className="inline-block h-px w-8 bg-primary/60" />
@@ -53,7 +52,7 @@ export function Eyebrow({ children }: { children: ReactNode }) {
   );
 }
 
-/* Character-by-character reveal with blur-to-sharp */
+/* Word-by-word reveal optimized for zero GPU blur overhead */
 export function CharReveal({
   text,
   className,
@@ -73,36 +72,31 @@ export function CharReveal({
       <span className="sr-only">{text}</span>
       <span aria-hidden className="inline-block">
         {words.map((word, wi) => (
-          <span key={wi} className="inline-block whitespace-nowrap">
-            {word.split("").map((ch, ci) => (
-              <motion.span
-                key={ci}
-                className={cn("inline-block", gradient && "text-gradient-char")}
-                initial={{ opacity: 0, y: "0.5em", filter: "blur(10px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{
-                  duration: 0.8,
-                  ease: EASE,
-                  delay: delay + (wi * 3 + ci) * 0.018,
-                }}
-              >
-                {ch}
-              </motion.span>
-            ))}
-            {wi < words.length - 1 && <span className="inline-block">&nbsp;</span>}
-          </span>
+          <motion.span
+            key={wi}
+            initial={{ opacity: 0, y: "0.4em" }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{
+              duration: 0.65,
+              ease: EASE,
+              delay: delay + wi * 0.04,
+            }}
+            className={cn("inline-block whitespace-nowrap mr-[0.25em]", gradient && "text-gradient-char")}
+          >
+            {word}
+          </motion.span>
         ))}
       </span>
     </Tag>
   );
 }
 
-/* Generic staggered reveal */
+/* Lightweight reveal */
 export function Reveal({
   children,
   delay = 0,
-  y = 26,
+  y = 20,
   className,
   style,
 }: {
@@ -116,17 +110,17 @@ export function Reveal({
     <motion.div
       className={className}
       {...(style ? { style } : {})}
-      initial={{ opacity: 0, y, filter: "blur(8px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "-70px" }}
-      transition={{ duration: 0.85, ease: EASE, delay }}
+      initial={{ opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.65, ease: EASE, delay }}
     >
       {children}
     </motion.div>
   );
 }
 
-/* Magnetic button — pulls toward the cursor */
+/* Magnetic button — pulls toward cursor on desktop, plain button on touch */
 export function MagneticButton({
   children,
   href,
@@ -141,23 +135,31 @@ export function MagneticButton({
   className?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
-  const x = useSpring(useMotionValue(0), { stiffness: 220, damping: 18 });
-  const y = useSpring(useMotionValue(0), { stiffness: 220, damping: 18 });
+  const [isDesktop, setIsDesktop] = useState(false);
+  const x = useSpring(useMotionValue(0), { stiffness: 200, damping: 20 });
+  const y = useSpring(useMotionValue(0), { stiffness: 200, damping: 20 });
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 768 && !("ontouchstart" in window));
+  }, []);
 
   const handleMove = (e: React.MouseEvent) => {
+    if (!isDesktop) return;
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
-    x.set(((e.clientX - (r.left + r.width / 2)) / r.width) * 26);
-    y.set(((e.clientY - (r.top + r.height / 2)) / r.height) * 20);
+    x.set(((e.clientX - (r.left + r.width / 2)) / r.width) * 20);
+    y.set(((e.clientY - (r.top + r.height / 2)) / r.height) * 16);
   };
+
   const reset = () => {
+    if (!isDesktop) return;
     x.set(0);
     y.set(0);
   };
 
   const base =
-    "animated-border group relative inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-medium tracking-tight transition-colors duration-500";
+    "animated-border group relative inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-medium tracking-tight transition-colors duration-300";
   const look =
     variant === "solid"
       ? "bg-primary text-primary-foreground hover:bg-primary/90"
@@ -172,13 +174,13 @@ export function MagneticButton({
       onClick={onClick}
       onMouseMove={handleMove}
       onMouseLeave={reset}
-      style={{ x, y }}
+      style={isDesktop ? { x, y } : {}}
       whileTap={{ scale: 0.96 }}
       className={cn(base, look, className)}
     >
       {children}
       <span
-        className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{ boxShadow: "var(--shadow-glow)" }}
         aria-hidden
       />
@@ -186,11 +188,11 @@ export function MagneticButton({
   );
 }
 
-/* 3D tilt card with a moving glare */
+/* 3D tilt card — enabled on desktop, lightweight glass card on mobile */
 export function TiltCard({
   children,
   className,
-  intensity = 10,
+  intensity = 8,
   style,
 }: {
   children: ReactNode;
@@ -199,34 +201,30 @@ export function TiltCard({
   style?: CSSProperties;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const rx = useSpring(useMotionValue(0), { stiffness: 180, damping: 16 });
-  const ry = useSpring(useMotionValue(0), { stiffness: 180, damping: 16 });
-  const gx = useSpring(useMotionValue(50), { stiffness: 140, damping: 20 });
-  const gy = useSpring(useMotionValue(50), { stiffness: 140, damping: 20 });
+  const [isDesktop, setIsDesktop] = useState(false);
+  const rx = useSpring(useMotionValue(0), { stiffness: 180, damping: 18 });
+  const ry = useSpring(useMotionValue(0), { stiffness: 180, damping: 18 });
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 768 && !("ontouchstart" in window));
+  }, []);
 
   const onMove = (e: React.MouseEvent) => {
+    if (!isDesktop) return;
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width;
     const py = (e.clientY - r.top) / r.height;
-    ry.set((px - 0.5) * intensity * 2);
-    rx.set(-(py - 0.5) * intensity * 2);
-    gx.set(px * 100);
-    gy.set(py * 100);
-  };
-  const reset = () => {
-    rx.set(0);
-    ry.set(0);
-    gx.set(50);
-    gy.set(50);
+    ry.set((px - 0.5) * intensity * 1.5);
+    rx.set(-(py - 0.5) * intensity * 1.5);
   };
 
-  const glare = useTransform(
-    [gx, gy],
-    ([a, b]) =>
-      `radial-gradient(closest-side circle at ${a}% ${b}%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 72%)`,
-  );
+  const reset = () => {
+    if (!isDesktop) return;
+    rx.set(0);
+    ry.set(0);
+  };
 
   return (
     <motion.div
@@ -234,24 +232,21 @@ export function TiltCard({
       onMouseMove={onMove}
       onMouseLeave={reset}
       style={
-        { rotateX: rx, rotateY: ry, transformPerspective: 900, ...style } as MotionStyle
+        isDesktop
+          ? ({ rotateX: rx, rotateY: ry, transformPerspective: 900, ...style } as MotionStyle)
+          : (style as MotionStyle)
       }
       className={cn("relative [transform-style:preserve-3d]", className)}
     >
       {children}
-      <motion.span
-        aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-500 hover:opacity-100"
-        style={{ backgroundImage: glare, opacity: 0.7 }}
-      />
     </motion.div>
   );
 }
 
-/* Parallax wrapper driven by scroll progress */
+/* Parallax wrapper — disabled on mobile for lag-free touch scrolling */
 export function Parallax({
   children,
-  distance = 70,
+  distance = 50,
   className,
 }: {
   children: ReactNode;
@@ -259,49 +254,23 @@ export function Parallax({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 768);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
+
   const y = useTransform(scrollYProgress, [0, 1], [distance, -distance]);
+
   return (
-    <motion.div ref={ref} style={{ y }} className={className}>
+    <motion.div ref={ref} style={isDesktop ? { y } : {}} className={className}>
       {children}
     </motion.div>
-  );
-}
-
-/* Image reveal: clip-path wipe + blur-to-sharp + slow zoom */
-export function ImageReveal({
-  src,
-  alt,
-  className,
-  imgClassName,
-  delay = 0,
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-  imgClassName?: string;
-  delay?: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <div ref={ref} className={cn("relative overflow-hidden", className)}>
-      <motion.img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        initial={{ clipPath: "inset(0 0 100% 0)", scale: 1.14, filter: "blur(14px)" }}
-        animate={
-          inView ? { clipPath: "inset(0 0 0% 0)", scale: 1, filter: "blur(0px)" } : {}
-        }
-        transition={{ duration: 1.2, ease: EASE, delay }}
-        className={cn("h-full w-full object-cover", imgClassName)}
-      />
-    </div>
   );
 }
 

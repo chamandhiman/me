@@ -11,7 +11,14 @@ export function Nav() {
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 24, restDelta: 0.001 });
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    let currentScrolled = false;
+    const onScroll = () => {
+      const isNextScrolled = window.scrollY > 40;
+      if (currentScrolled !== isNextScrolled) {
+        currentScrolled = isNextScrolled;
+        setScrolled(isNextScrolled);
+      }
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
