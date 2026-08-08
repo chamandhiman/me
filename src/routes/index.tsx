@@ -5,6 +5,7 @@ import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { PortfolioShowcase } from "@/components/sections/PortfolioShowcase";
 import { Skills } from "@/components/sections/Skills";
+import { DevAiWorkflow } from "@/components/sections/DevAiWorkflow";
 import { Experience } from "@/components/sections/Experience";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
@@ -61,7 +62,10 @@ function Index() {
         {/* 4. CORE CAPABILITIES */}
         <Skills />
 
-        {/* 5. PROFESSIONAL JOURNEY */}
+        {/* 5. DEVELOPMENT & AI-ASSISTED WORKFLOW */}
+        <DevAiWorkflow />
+
+        {/* 6. PROFESSIONAL JOURNEY */}
         <Experience />
 
         {/* 6. COMPACT CTA & CONTACT */}

@@ -1,13 +1,4 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import {
-  Aurora,
-  MeshGradient,
-  AnimatedGrid,
-  ParticleField,
-  MouseSpotlight,
-  GlowOrbs,
-  Vignette,
-} from "@/components/backgrounds";
 import { CharReveal, MagneticButton, Marquee, Reveal } from "@/components/motion-kit";
 import { person, heroMarquee, heroStats } from "@/data/portfolio";
 import { useRef } from "react";
@@ -26,26 +17,17 @@ export function Hero() {
       id="hero"
       className="relative isolate flex min-h-[92svh] items-center overflow-hidden bg-background px-6 pt-28 pb-16 md:px-10"
     >
-      {/* Real Full Hero background image blend */}
+      {/* Full background image with mobile text-contrast gradient overlays */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <img
           src={chamanImg}
           alt={person.name}
-          className="h-full w-full object-cover object-right md:object-center filter contrast-[1.03] brightness-95 opacity-90"
+          className="h-full w-full object-cover object-[85%_15%] sm:object-[82%_20%] lg:object-right"
         />
-        {/* Soft edge gradient masks for perfect text contrast on the left */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/75 to-transparent md:w-3/4 lg:w-2/3" />
-        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-background via-background/60 to-transparent" />
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background/80 to-transparent" />
+        {/* Responsive dark gradient overlay for text readability on mobile */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/85 to-background/40 md:from-background/95 md:via-background/70 md:to-transparent md:w-3/4 lg:w-2/3" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background via-background/60 to-transparent" />
       </div>
-
-      <Aurora />
-      <MeshGradient opacity={0.4} />
-      <AnimatedGrid size={64} opacity={0.2} />
-      <ParticleField />
-      <GlowOrbs count={3} />
-      <MouseSpotlight />
-      <Vignette />
 
       <motion.div
         style={{ y, opacity, scale }}
