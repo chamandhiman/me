@@ -1,0 +1,86 @@
+import { Aurora, WireGlobe, Vignette } from "@/components/backgrounds";
+import { Eyebrow, MagneticButton, Reveal, Section } from "@/components/motion-kit";
+import { person, socials } from "@/data/portfolio";
+import { Mail, MapPin } from "lucide-react";
+
+export function Contact() {
+  return (
+    <Section
+      id="contact"
+      className="py-20 md:py-28"
+      backdrop={
+        <>
+          <Aurora intensity={0.6} />
+          <WireGlobe />
+          <Vignette />
+        </>
+      }
+    >
+      <div className="mx-auto max-w-3xl text-center">
+        <Eyebrow>Contact</Eyebrow>
+        <Reveal>
+          <h2 className="text-gradient font-display text-[clamp(2rem,5vw,4rem)] leading-[1.05] font-semibold">
+            Let&rsquo;s build something worth remembering
+          </h2>
+        </Reveal>
+        <Reveal>
+          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
+            Based in {person.location}. Open for UI/UX design, responsive web projects, and product modernization collaborations.
+          </p>
+        </Reveal>
+
+        <Reveal>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <MagneticButton href={`mailto:${person.email}`}>
+              {person.email}
+              <span aria-hidden className="ml-1">→</span>
+            </MagneticButton>
+            <MagneticButton href="#hero" variant="ghost">
+              Back to Top
+            </MagneticButton>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 max-w-xl mx-auto">
+            <div className="neon-card rounded-2xl p-5 flex items-center justify-center gap-3">
+              <MapPin className="w-5 h-5 text-cyan-400" />
+              <div className="text-left">
+                <dt className="font-mono text-[10px] tracking-[0.25em] text-cyan-400 uppercase font-bold">
+                  Location
+                </dt>
+                <dd className="text-sm text-foreground font-medium">{person.location}</dd>
+              </div>
+            </div>
+
+            <div className="neon-card rounded-2xl p-5 flex items-center justify-center gap-3">
+              <Mail className="w-5 h-5 text-cyan-400" />
+              <div className="text-left">
+                <dt className="font-mono text-[10px] tracking-[0.25em] text-cyan-400 uppercase font-bold">
+                  Email
+                </dt>
+                <dd className="text-sm text-foreground font-medium truncate max-w-[200px] sm:max-w-xs">{person.email}</dd>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            {socials.filter(s => !s.placeholder).map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target={s.href.startsWith("http") ? "_blank" : undefined}
+                rel="noreferrer noopener"
+                className="tech-badge px-5 py-2 rounded-full cursor-pointer"
+              >
+                {s.label}
+              </a>
+            ))}
+          </div>
+        </Reveal>
+      </div>
+    </Section>
+  );
+}
