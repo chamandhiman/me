@@ -1,5 +1,5 @@
 import { ParticleField, WaveField } from "@/components/backgrounds";
-import { navLinks, person } from "@/data/portfolio";
+import { navLinks, person, socials } from "@/data/portfolio";
 
 export function Footer() {
   return (
@@ -31,6 +31,19 @@ export function Footer() {
               </a>
             ))}
           </nav>
+          <div className="flex flex-wrap items-center gap-4">
+            {socials.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target={s.href.startsWith("http") ? "_blank" : undefined}
+                rel="noreferrer noopener"
+                className="text-xs font-medium text-cyan-400 hover:text-cyan-200 transition-colors"
+              >
+                {s.label} ↗
+              </a>
+            ))}
+          </div>
           <p className="font-mono text-[10px] tracking-[0.25em] text-muted-foreground/70 uppercase">
             © {new Date().getFullYear()} {person.name} — {person.location}
           </p>

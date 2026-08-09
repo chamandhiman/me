@@ -286,18 +286,31 @@ export function PortfolioShowcase() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeModalIndex, closeModal, nextModalImage, prevModalImage]);
 
+  useEffect(() => {
+    if (activeModalIndex !== null) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [activeModalIndex]);
+
   const currentModalItem = activeModalIndex !== null ? modalImages[activeModalIndex] : null;
 
   return (
     <>
       <Section
-      backdrop={
-        <>
-          <LightRays />
-          <Vignette />
-        </>
-      }
-    >
+        id="featured-work"
+        backdrop={
+          <>
+            <LightRays />
+            <Vignette />
+          </>
+        }
+      >
+        <div id="projects" className="-translate-y-24 scroll-mt-28" />
       {/* SECTION HEADER & CASE STUDY NAV CHIPS */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/10">
         <div>

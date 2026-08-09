@@ -45,7 +45,7 @@ export const person = {
 };
 
 export const socials = [
-  { label: "LinkedIn", href: "#", placeholder: true },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/chaman-dhiman/", placeholder: false },
   { label: "GitHub", href: "https://chamandhiman.github.io/me/", placeholder: false },
   { label: "Email", href: "mailto:chamandhiman1988@gmail.com", placeholder: false },
 ];
