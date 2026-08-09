@@ -54,7 +54,7 @@ export function Hero() {
 
           <Reveal>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <MagneticButton href="#work">
+              <MagneticButton href="#projects">
                 View Selected Work
                 <span aria-hidden className="ml-1">→</span>
               </MagneticButton>
